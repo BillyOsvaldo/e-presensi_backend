@@ -39,7 +39,7 @@
     }
   },
   "eakun": {
-    "host": "purbalinggakab.go.id",
+    "host": "localhost",
     "port": 3030
   },
   "api_key": ["lf093i2jgjksop44"]
