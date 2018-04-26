@@ -1,4 +1,4 @@
-module.exports = class MenusManagement {
+module.exports = class AbsencesTypesManagement {
   async create(data, params) {
     return await this.app.service('absencestypes').create(data, params)
   }
