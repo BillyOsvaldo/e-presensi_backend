@@ -14,7 +14,7 @@ module.exports.user = (context) => {
 
         // profile, organization, username
 
-        const res = await client.service('usersformachinesusers').get(machine.user, context.params)
+        const res = await client.service('usersformachinesusers').get(absence.user, context.params)
 
         absence.user = res
       },
