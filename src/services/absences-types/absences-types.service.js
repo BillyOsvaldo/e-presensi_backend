@@ -14,7 +14,7 @@ module.exports = function (app) {
   };
 
   // Initialize our service with any options it requires
-  app.use('/absences-types', createService(options));
+  app.use('/absencestypes', createService(options));
 
   // Get our initialized service so that we can register hooks and filters
   const service = app.service('absencestypes');
