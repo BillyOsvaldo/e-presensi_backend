@@ -26,8 +26,10 @@ const usersForMachinesUsers = require('./usersformachinesusers/usersformachinesu
 
 const absencesTypes = require('./absences-types/absences-types.service.js');
 const absencesTypesManagement = require('./absencestypesmanagement/absencestypesmanagement.service.js');
+const absencesTypesSelect = require('./absencestypesselect/absencestypesselect.service.js');
 
 const absences = require('./absences/absences.service.js');
+const absencesmanagement = require('./absencesmanagement/absencesmanagement.service.js');
 
 module.exports = function (app) {
   app.configure(presences);
@@ -50,5 +52,7 @@ module.exports = function (app) {
   app.configure(usersForMachinesUsers);
   app.configure(absencesTypes);
   app.configure(absencesTypesManagement);
+  app.configure(absencesTypesSelect);
   app.configure(absences);
+  app.configure(absencesmanagement);
 };
