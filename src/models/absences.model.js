@@ -11,7 +11,7 @@ module.exports = function (app) {
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     desc: { type: String, required: true },
-    status: { type: Number, required: true }
+    status: { type: Boolean, required: true }
   }, {
     timestamps: true,
     versionKey: false
