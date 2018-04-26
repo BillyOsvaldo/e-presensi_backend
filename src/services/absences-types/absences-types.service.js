@@ -8,7 +8,7 @@ module.exports = function (app) {
   const paginate = app.get('paginate');
 
   const options = {
-    name: 'absences-types',
+    name: 'absencestypes',
     Model,
     paginate
   };
@@ -17,7 +17,7 @@ module.exports = function (app) {
   app.use('/absences-types', createService(options));
 
   // Get our initialized service so that we can register hooks and filters
-  const service = app.service('absences-types');
+  const service = app.service('absencestypes');
 
   service.hooks(hooks);
 };
