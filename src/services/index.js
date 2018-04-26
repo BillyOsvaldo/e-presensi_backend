@@ -24,6 +24,11 @@ const fingersUsers = require('./fingers-users/fingers-users.service.js');
 const fingersUsersManagement = require('./fingers-users-management/fingers-users-management.service.js');
 const usersForMachinesUsers = require('./usersformachinesusers/usersformachinesusers.service.js');
 
+const absencesTypes = require('./absences-types/absences-types.service.js');
+const absencesTypesManagement = require('./absencestypesmanagement/absencestypesmanagement.service.js');
+
+const absences = require('./absences/absences.service.js');
+
 module.exports = function (app) {
   app.configure(presences);
   app.configure(users);
@@ -43,4 +48,7 @@ module.exports = function (app) {
   app.configure(fingersUsers);
   app.configure(fingersUsersManagement);
   app.configure(usersForMachinesUsers);
+  app.configure(absencesTypes);
+  app.configure(absencesTypesManagement);
+  app.configure(absences);
 };
