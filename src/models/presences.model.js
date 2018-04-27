@@ -6,13 +6,11 @@ module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const presences = new Schema({
-    user_id: {
+    user: {
       type: mongooseClient.Schema.Types.ObjectId,
-      ref: 'organizations',
       required: true
     },
-    time_in: { type: Date, default: Date.now },
-    time_out: { type: Date }
+    time: { type: Date, default: Date.now }
   }, {
     timestamps: false,
     versionKey: false
