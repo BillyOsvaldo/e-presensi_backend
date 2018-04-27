@@ -25,6 +25,7 @@ class Service {
       {
         $project: {
           user: 1,
+          time: 1,
           month: { $month: '$time'},
           year: { $year: '$time'},
         }
