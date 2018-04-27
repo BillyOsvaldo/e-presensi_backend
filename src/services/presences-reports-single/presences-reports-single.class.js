@@ -24,7 +24,7 @@ class Service {
     const aggregateData = [
       {
         $project: {
-          name: 1,
+          user: 1,
           month: { $month: '$time'},
           year: { $year: '$time'},
         }
@@ -32,7 +32,7 @@ class Service {
       {
         $match: {
           $and: [
-            { user: objectid(context.params.user) }
+            { user: objectid(params.query.user) },
             { month: parseInt(params.query.month) },
             { year: parseInt(params.query.year) }
           ]
