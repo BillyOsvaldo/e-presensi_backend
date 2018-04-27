@@ -55,7 +55,7 @@
     "serve-favicon": "^2.5.0",
     "socket.io-client": "^2.1.0",
     "uws": "^9.147.0",
-    "winston": "^2.4.1"
+    "winston": "^2.4.2"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
