@@ -48,6 +48,7 @@ class Service {
       resSingle.id = doc._id
       resSingle.title = momentDate.format('HH:mm')
       resSingle.start = momentDate.format('YYYY-MM-DD')
+      resSingle.className = 'inout'
       return resSingle
     })
 
