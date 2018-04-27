@@ -44,6 +44,7 @@ class Service {
     const res = docs.map(doc => {
       var resSingle = {}
       const momentDate = moment(doc.time)
+      resSingle._id = doc._id
       resSingle.title = momentDate.format('HH:mm')
       resSingle.start = momentDate.format('YYYY-MM-DD')
       return resSingle
