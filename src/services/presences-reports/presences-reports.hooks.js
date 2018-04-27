@@ -1,16 +1,11 @@
-const { authenticate } = require('feathers-authentication').hooks
-const resolveUser = require('../../hooks/resolve_user')
-const resolvePresenceData = require('../../hooks/resolve_presence_data')
+
 
 module.exports = {
   before: {
     all: [],
-    find: [
-      authenticate('jwt'),
-      resolveUser()
-    ],
+    find: [],
     get: [],
-    create: [ resolvePresenceData ],
+    create: [],
     update: [],
     patch: [],
     remove: []
