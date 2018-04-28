@@ -1,6 +1,7 @@
 const { authenticate } = require('feathers-authentication').hooks
 const resolveUser = require('../../hooks/resolve_user')
 const resolvePresenceData = require('../../hooks/resolve_presence_data')
+const checkIfExist = require('../../hooks/check_presences')
 
 module.exports = {
   before: {
@@ -10,7 +11,7 @@ module.exports = {
       resolveUser()
     ],
     get: [],
-    create: [ resolvePresenceData ],
+    create: [ resolvePresenceData, checkIfExist ],
     update: [],
     patch: [],
     remove: []
