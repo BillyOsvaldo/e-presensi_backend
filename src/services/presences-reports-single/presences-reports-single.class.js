@@ -26,6 +26,7 @@ class Service {
         $project: {
           user: 1,
           time: 1,
+          mode: 1,
           month: { $month: '$time'},
           year: { $year: '$time'},
         }
@@ -48,7 +49,8 @@ class Service {
       resSingle.id = doc._id
       resSingle.title = momentDate.format('HH:mm')
       resSingle.start = momentDate.format('YYYY-MM-DD')
-      resSingle.className = 'inout'
+      resSingle.className = (doc.mode == 1 ? 'mode-in' : 'mode-out')
+
       return resSingle
     })
 
