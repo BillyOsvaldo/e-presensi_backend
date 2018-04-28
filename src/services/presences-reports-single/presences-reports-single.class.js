@@ -19,40 +19,101 @@ class Service {
     }
   */
   async find (params) {
-    const Presences = this.app.service('presences').Model
+    const getPresences = async () => {
+      const Presences = this.app.service('presences').Model
 
-    const aggregateData = [
-      {
-        $project: {
-          user: 1,
-          time: 1,
-          mode: 1,
-          month: { $month: '$time'},
-          year: { $year: '$time'},
+      const aggregateData = [
+        {
+          $project: {
+            user: 1,
+            time: 1,
+            mode: 1,
+            month: { $month: '$time'},
+            year: { $year: '$time'},
+          }
+        },
+        {
+          $match: {
+            $and: [
+              { user: objectid(params.query.user) },
+              { month: parseInt(params.query.month) },
+              { year: parseInt(params.query.year) }
+            ]
+          }
         }
-      },
-      {
-        $match: {
-          $and: [
-            { user: objectid(params.query.user) },
-            { month: parseInt(params.query.month) },
-            { year: parseInt(params.query.year) }
-          ]
+      ]
+
+      const docsPresences = await Presences.aggregate(aggregateData)
+      const res = docsPresences.map(doc => {
+        var resSingle = {}
+        const momentDate = moment(doc.time)
+        resSingle.id = doc._id
+        resSingle.title = momentDate.format('HH:mm')
+        resSingle.start = momentDate.format('YYYY-MM-DD')
+        resSingle.className = (doc.mode == 1 ? 'mode-in' : 'mode-out')
+
+        return resSingle
+      })
+      return res
+    }
+
+    const getAbsences = async () => {
+      const Absences = this.app.service('absences').Model
+
+      const aggregateData = [
+        {
+          $project: {
+            user: 1,
+            absencestype: 1,
+            startDate: 1,
+            endDate: 1,
+            month: { $month: '$startDate'},
+            year: { $year: '$startDate'}
+          }
+        },
+        {
+          $match: {
+            $and: [
+              { user: objectid(params.query.user) },
+              { month: parseInt(params.query.month) },
+              { year: parseInt(params.query.year) }
+            ]
+          }
+        },
+        { $lookup: { from: 'absencestypes', localField: 'absencestype', foreignField: '_id', as: 'absence_type_text'} },
+        { $unwind: { path: '$absence_type_text', preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            user: 1,
+            absencestype: 1,
+            absence_type_text: 1,
+            startDate: 1,
+            endDate: 1,
+            month: { $month: '$startDate'},
+            year: { $year: '$startDate'}
+          }
         }
-      }
-    ]
+      ]
 
-    const docs = await Presences.aggregate(aggregateData)
-    const res = docs.map(doc => {
-      var resSingle = {}
-      const momentDate = moment(doc.time)
-      resSingle.id = doc._id
-      resSingle.title = momentDate.format('HH:mm')
-      resSingle.start = momentDate.format('YYYY-MM-DD')
-      resSingle.className = (doc.mode == 1 ? 'mode-in' : 'mode-out')
+      const docs = await Absences.aggregate(aggregateData)
+      const res = docs.map(doc => {
+        const momentStartDate = moment(doc.startDate)
+        const momentEndDate = moment(doc.endDate)
 
-      return resSingle
-    })
+        var resSingle = {}
+        resSingle.id = doc._id
+        resSingle.title = doc.absence_type_text.name
+        resSingle.start = momentStartDate.format('YYYY-MM-DD')
+        resSingle.end = momentEndDate.format('YYYY-MM-DD')
+
+        return resSingle
+      })
+      return res
+    }
+
+    const resPresences = await getPresences()
+    const resAbsences = await getAbsences()
+    const res = resPresences.concat(resAbsences)
 
     return {
       total: res.length,
