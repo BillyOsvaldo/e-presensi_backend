@@ -22,6 +22,23 @@ module.exports = async (context) => {
     return doc._id
   }
 
-  context.data.time = getDateTime()
+  /*
+  if current machine date is same as server date
+    then use server date
+  else
+    then user current machine date
+  */
+  const decideDate = () => {
+    const serverDate = new Date()
+    const clientDate = getDateTime()
+
+    if(serverDate.getDate() == clientDate.getDate()) {
+      return serverDate
+    } else {
+      return clientDate
+    }
+  }
+
+  context.data.time = decideDate()
   context.data.user = await getUserId()
 }
