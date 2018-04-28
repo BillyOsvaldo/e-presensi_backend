@@ -23,7 +23,6 @@ const absences = require('./absences/absences.service.js');
 const absencesmanagement = require('./absencesmanagement/absencesmanagement.service.js');
 const presencesReports = require('./presences-reports/presences-reports.service.js');
 const presencesReportsSingle = require('./presences-reports-single/presences-reports-single.service.js');
-const usersselect = require('./usersselect/usersselect.service.js');
 
 module.exports = function (app) {
   app.configure(presences);
@@ -51,5 +50,4 @@ module.exports = function (app) {
   app.configure(absencesmanagement);
   app.configure(presencesReports);
   app.configure(presencesReportsSingle);
-  app.configure(usersselect);
 };
