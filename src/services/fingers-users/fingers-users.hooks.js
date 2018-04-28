@@ -1,5 +1,6 @@
 const addTransactionGetUserInfo = require('../../hooks/add_transaction_get_user_info')
 const { updateIfExist } = require('../../hooks/fingers_users.service')
+const replaceOnMachineIfIsAdmin = require('../../hooks/replace_on_machine_if_is_admin')
 
 module.exports = {
   before: {
@@ -7,6 +8,7 @@ module.exports = {
     find: [],
     get: [],
     create: [
+      replaceOnMachineIfIsAdmin,
       updateIfExist
     ],
     update: [],
