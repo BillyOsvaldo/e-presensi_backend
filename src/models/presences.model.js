@@ -10,7 +10,8 @@ module.exports = function (app) {
       type: mongooseClient.Schema.Types.ObjectId,
       required: true
     },
-    time: { type: Date, default: Date.now }
+    time: { type: Date, default: Date.now },
+    mode: { type: Number, required: true } // mode 1 = masuk, mode 2 = pulang
   }, {
     timestamps: false,
     versionKey: false
