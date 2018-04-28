@@ -105,7 +105,7 @@ class Service {
         resSingle.title = doc.absence_type_text.name
         resSingle.start = momentStartDate.format('YYYY-MM-DD')
         resSingle.end = momentEndDate.format('YYYY-MM-DD')
-        resSingle.className = resSingle.title.toLowerCase().replace(' ', '-')
+        resSingle.className = 'absence ' + resSingle.title.toLowerCase().replace(' ', '-')
 
         return resSingle
       })
