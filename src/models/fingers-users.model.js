@@ -9,7 +9,6 @@ module.exports = function (app) {
     user: { type: mongooseClient.Schema.Types.ObjectId, required: true },
     status: { type: Boolean, default: true },
     finger: { type: String }
-    //finger: { type: mongooseClient.Schema.Types.Buffer }
   }, {
     timestamps: true,
     versionKey: false
