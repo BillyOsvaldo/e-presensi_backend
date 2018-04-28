@@ -48,13 +48,15 @@ class Service {
     const Presences = this.app.service('presences').Model
 
     const getUsersIds = async () => {
-      var params2 = params
-      params2.query.$nopaginate = true
-      params2.headers = headers
-      params2.query.$select = ['_id']
+      var params2 = {
+        query: {
+          $nopaginate: true,
+          $select: ['_id']
+        },
+        headers: headers
+      }
 
       const docsUsers = await params.client.service('users').find(params2)
-
       const usersIds = docsUsers.map(doc => objectid(doc._id))
       return usersIds
     }
@@ -79,11 +81,13 @@ class Service {
         }
       }
     ]
+    //console.log('aggregateData', JSON.stringify(aggregateData))
 
     const docs = await Presences.aggregate(aggregateData)
 
     const fakeData = [
       {
+        _id: '5a0f959604e1cb7fd219bad9',
         name: "Edi Triono",
         tepat_waktu: Math.floor((Math.random() * 10) + 1),
         telat: Math.floor((Math.random() * 10) + 1),
@@ -94,6 +98,7 @@ class Service {
         ijin: Math.floor((Math.random() * 10) + 1),
         sakit: Math.floor((Math.random() * 10) + 1)
       },{
+        _id: '5a123489cbf7231cdf7e9088',
         name: "Billy Joe",
         tepat_waktu: Math.floor((Math.random() * 10) + 1),
         telat: Math.floor((Math.random() * 10) + 1),
@@ -104,6 +109,7 @@ class Service {
         ijin: Math.floor((Math.random() * 10) + 1),
         sakit: Math.floor((Math.random() * 10) + 1)
       },{
+        _id: '5ac825aeb6c1e341aef13784',
         name: "DC Kristiono",
         tepat_waktu: Math.floor((Math.random() * 10) + 1),
         telat: Math.floor((Math.random() * 10) + 1),
@@ -114,6 +120,7 @@ class Service {
         ijin: Math.floor((Math.random() * 10) + 1),
         sakit: Math.floor((Math.random() * 10) + 1)
       },{
+        _id: '5ac82798b6c1e341aef13785',
         name: "Kristianto",
         tepat_waktu: Math.floor((Math.random() * 10) + 1),
         telat: Math.floor((Math.random() * 10) + 1),
@@ -124,6 +131,7 @@ class Service {
         ijin: Math.floor((Math.random() * 10) + 1),
         sakit: Math.floor((Math.random() * 10) + 1)
       },{
+        _id: '5ac82c31b6c1e341aef13797',
         name: "Subhan",
         tepat_waktu: Math.floor((Math.random() * 10) + 1),
         telat: Math.floor((Math.random() * 10) + 1),
@@ -134,6 +142,7 @@ class Service {
         ijin: Math.floor((Math.random() * 10) + 1),
         sakit: Math.floor((Math.random() * 10) + 1)
       },{
+        _id: '5ac82c77b6c1e341aef13798',
         name: "Luki Hidayat",
         tepat_waktu: Math.floor((Math.random() * 10) + 1),
         telat: Math.floor((Math.random() * 10) + 1),
