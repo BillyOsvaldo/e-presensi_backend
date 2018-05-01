@@ -58,22 +58,41 @@ class Service {
       return new Date(year, month, 0).getDate()
     }
 
-    const getUsersIds = async () => {
+    const getDocsUsers = async () => {
       var params2 = {
         query: {
           organization: params.query.organization,
           $nopaginate: true,
-          $select: ['_id']
+          $select: ['_id', 'position']
         },
-        headers: headers
+        headers: params.headers
       }
 
       const docsUsers = await params.client.service('users').find(params2)
-      const usersIds = docsUsers.map(doc => objectid(doc._id))
-      return usersIds
+      return docsUsers
     }
 
-    const usersIds = await getUsersIds()
+    const sortUsers = async (docUsers) => {
+      const getOrderByUserId = async (positionId) => {
+        if(!positionId) return 999999
+
+        var params2 = { headers: params.headers }
+        const docsOrgStru = await params.client.service('organizationstructures').get(positionId, params2)
+        const order = docsOrgStru.order
+        return order
+      }
+
+      for(let docUser of docUsers) {
+        docUser.order = await getOrderByUserId(docUser.position)
+      }
+
+      const docUsersSorted = docUsers.sort((a, b) => a.order - b.order)
+      return docUsersSorted
+    }
+
+    const docsUsers = await getDocsUsers()
+    const docsUsersSorted = await sortUsers(docsUsers)
+    const usersIds = docsUsersSorted.map(doc => objectid(doc._id))
 
     const aggregatePresencesData = [
       {
@@ -243,7 +262,6 @@ class Service {
 
 
     const docsAbsences = await Absences.aggregate(aggregateAbsencesData)
-    //console.log('docsAbsences', docsAbsences)
     const docsPresences = await Presences.aggregate(aggregatePresencesData)
     const daysInMonth = getDaysInMonth(params.query.month, params.query.year)
 
