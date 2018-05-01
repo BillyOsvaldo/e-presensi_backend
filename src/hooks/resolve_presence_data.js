@@ -16,10 +16,10 @@ module.exports = async (context) => {
     return datetime
   }
 
-  const getUserId = async () => {
+  const getUserIdAndOrganization = async () => {
     const getusersbyusername = context.params.client.service('getusersbyusername')
     const doc = await getusersbyusername.get(username)
-    return doc._id
+    return { id: doc._id, organization: doc.organization }
   }
 
   /*
@@ -39,6 +39,8 @@ module.exports = async (context) => {
     }
   }
 
+  const { id, organization } = await getUserIdAndOrganization()
   context.data.time = decideDate()
-  context.data.user = await getUserId()
+  context.data.user = id
+  context.params.organization = organization
 }
