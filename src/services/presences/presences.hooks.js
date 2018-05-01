@@ -22,7 +22,12 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [ emitEvent ],
+    create: [
+      //emitEvent,
+      async (context) => {
+        context.service.emit('status', { status: 'OK......' })
+      }
+    ],
     update: [],
     patch: [],
     remove: []
