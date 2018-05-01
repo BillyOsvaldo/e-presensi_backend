@@ -1,4 +1,5 @@
 const errors = require('@feathersjs/errors')
+const utils = require('../helpers/utils')
 
 module.exports = async (context) => {
   const timeIo = context.data.time_io
@@ -19,7 +20,13 @@ module.exports = async (context) => {
   const getUserIdAndOrganization = async () => {
     const getusersbyusername = context.params.client.service('getusersbyusername')
     const doc = await getusersbyusername.get(username)
-    return { id: doc._id, organization: doc.organization }
+    return { id: doc._id, organization: doc.organization, profileId: doc.profile }
+  }
+
+  const getName = async (profileId) => {
+    const profiles = context.params.client.service('profiles')
+    const doc = await profiles.get(profileId)
+    return utils.getFullName(doc)
   }
 
   /*
@@ -39,8 +46,9 @@ module.exports = async (context) => {
     }
   }
 
-  const { id, organization } = await getUserIdAndOrganization()
+  const { id, organization, profileId } = await getUserIdAndOrganization()
   context.data.time = decideDate()
   context.data.user = id
   context.params.organization = organization
+  context.params.name = await getName(profileId)
 }
