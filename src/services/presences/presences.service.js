@@ -12,6 +12,7 @@ module.exports = function (app) {
   const params = { query: { $select: ['_id'], $nopaginate: true } }
   //const docs = ['59d82e333c526cb500b7bc1e', '5a9a06110a190f540b59c786', '5ab08b206611c4688fa3c1cb' ]//await organizations.find(params)
   //const eventsName = docs.map(doc => 'organization_' + doc._id.toString())
+  // FIXME TODO
   const eventsName = ['organization_59d82e333c526cb500b7bc1e', 'organization_5a9a06110a190f540b59c786', 'organization_5ab08b206611c4688fa3c1cb' ]
 
   const options = {

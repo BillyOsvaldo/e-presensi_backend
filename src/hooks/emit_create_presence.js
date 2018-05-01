@@ -8,6 +8,5 @@ module.exports = (context) => {
     mode: context.data.mode
   }
 
-  console.log('context.result._id', context.result._id)
   context.service.emit(eventName, data)
 }
