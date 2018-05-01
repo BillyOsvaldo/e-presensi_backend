@@ -55,7 +55,8 @@ class Service {
             { year: parseInt(year) }
           ]
         }
-      }
+      },
+      { $sort: { time: -1 } }
     ]
 
     const docs = await Presences.aggregate(aggregateData)
