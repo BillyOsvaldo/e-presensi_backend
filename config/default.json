@@ -42,5 +42,7 @@
     "host": "localhost",
     "port": 3030
   },
-  "api_key": ["lf093i2jgjksop44"]
+  "api_key": ["lf093i2jgjksop44"],
+  "time_in": "07:30",
+  "time_out": "14:00"
 }

@@ -1,3 +1,5 @@
+const utils = require('../../helpers/utils')
+
 /* eslint-disable no-unused-vars */
 class Service {
   constructor (options) {
@@ -24,24 +26,7 @@ class Service {
       }
 
       let docProfile = await profiles.get(doc.profile)
-      let name = docProfile.name
-
-      var firstTitle
-      if(name.first_title) {
-        firstTitle = name.first_title + '. '
-      } else {
-        firstTitle = ''
-      }
-
-      var lastTitle
-      if(name.last_title) {
-        lastTitle = ' ' + name.last_title
-      } else {
-        lastTitle = ''
-      }
-
-      let fullname = `${firstTitle}${name.first_name} ${name.last_name}${lastTitle}`
-      doc.name = fullname
+      doc.name = utils.getFullName(docProfile)
     }
 
     const result = {
