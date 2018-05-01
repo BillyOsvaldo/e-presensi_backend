@@ -7,7 +7,8 @@ module.exports = (context) => {
   }
   console.log('data', data)
 
-  context.app.service('presences').emit('organization', {
+  const presences = context.app.service('presences')
+  presences.emit('organization', {
     type: 'organization',
     data: data
   })
