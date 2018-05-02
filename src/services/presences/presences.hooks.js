@@ -1,5 +1,5 @@
 const { authenticate } = require('feathers-authentication').hooks
-const resolveUser = require('../../hooks/resolve_user')
+//const resolveUser = require('../../hooks/resolve_user')
 const resolvePresenceData = require('../../hooks/resolve_presence_data')
 const checkIfExist = require('../../hooks/check_presences')
 const emitEvent = require('../../hooks/emit_create_presence')
@@ -9,7 +9,7 @@ module.exports = {
     all: [],
     find: [
       authenticate('jwt'),
-      resolveUser()
+      //resolveUser()
     ],
     get: [],
     create: [ resolvePresenceData, checkIfExist ],

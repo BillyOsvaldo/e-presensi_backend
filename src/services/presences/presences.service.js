@@ -2,6 +2,8 @@
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/presences.model');
 const hooks = require('./presences.hooks');
+const request = require('sync-request')
+const config = require('../../../config/default')
 
 module.exports = function (app) {
   const Model = createModel(app);
@@ -10,10 +12,9 @@ module.exports = function (app) {
   const client = require('../../hooks/client').getClient(app)
   const organizations = client.service('organizations')
   const params = { query: { $select: ['_id'], $nopaginate: true } }
-  //const docs = ['59d82e333c526cb500b7bc1e', '5a9a06110a190f540b59c786', '5ab08b206611c4688fa3c1cb' ]//await organizations.find(params)
-  //const eventsName = docs.map(doc => 'organization_' + doc._id.toString())
-  // FIXME TODO
-  const eventsName = ['organization_59d82e333c526cb500b7bc1e', 'organization_5a9a06110a190f540b59c786', 'organization_5ab08b206611c4688fa3c1cb' ]
+  const docsOrganizatonsStr = request('GET', 'http://' + config.eakun.host + ':' + config.eakun.port + '/organizations?$select[]=$_id&$nopaginate=true')
+  const docs = JSON.parse(docsOrganizatonsStr.body.toString())
+  const eventsName = docs.map(doc => 'organization_' + doc._id.toString())
 
   const options = {
     name: 'presences',
