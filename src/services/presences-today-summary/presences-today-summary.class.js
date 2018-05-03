@@ -113,12 +113,11 @@ class Service {
     const countUsers = docsUsers.length
     const countTepatWaktu = await getCountTepatWaktu(docsIds)
     const countTerlambat = await getCountTerlambat(docsIds)
-    const countBelumDatang = countUsers - countTepatWaktu - countTerlambat
 
     const data = {
       tepat_waktu: countTepatWaktu,
       terlambat: countTerlambat,
-      belum_datang: countBelumDatang
+      total: countUsers
     }
 
     for(let doc of await getKetidakhadiran(docsIds)) {
