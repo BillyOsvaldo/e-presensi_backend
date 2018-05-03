@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 module.exports = (context) => {
   const eventName = 'organization_' + context.params.organization
 
@@ -10,4 +12,20 @@ module.exports = (context) => {
   }
 
   context.service.emit(eventName, data)
+
+  const configTimeIn = context.app.get('time_in')
+  const currentDate = moment().format('YYYY-MM-DD')
+  const timeInDateTime = new Date(currentDate + ' ' + configTimeIn)
+
+  var eventCustom
+  if(context.data.mode == 1) {
+    console.log('fire ' + eventCustom)
+    if(context.data.time < timeInDateTime) {
+      eventCustom = eventName + '_tepat_waktu'
+      context.service.emit(eventCustom, data)
+    } else {
+      eventCustom = eventName + '_terlambat'
+      context.service.emit(eventCustom, data)
+    }
+  }
 }
