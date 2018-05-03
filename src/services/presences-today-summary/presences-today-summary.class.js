@@ -128,7 +128,7 @@ class Service {
       total: 1,
       limit: 1,
       skip: 0,
-      data: data
+      data: [ data ]
     }
   }
 
