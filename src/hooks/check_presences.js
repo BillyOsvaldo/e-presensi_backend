@@ -38,6 +38,6 @@ module.exports = async (context) => {
 
   const exist = Boolean(docs.length)
   if(exist) {
-    context.result = { status: 'OK', _id: docs[0]._id }
+    context.result = { status: 'OK', _id: docs[0]._id, already_exist: 1 }
   }
 }
