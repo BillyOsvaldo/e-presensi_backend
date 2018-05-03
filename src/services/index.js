@@ -26,6 +26,8 @@ const presencesReportsSingle = require('./presences-reports-single/presences-rep
 
 const presencesToday = require('./presences-today/presences-today.service.js');
 
+const presencesTodaySummary = require('./presences-today-summary/presences-today-summary.service.js');
+
 module.exports = function (app) {
   app.configure(presences);
   app.configure(users);
@@ -53,4 +55,5 @@ module.exports = function (app) {
   app.configure(presencesReports);
   app.configure(presencesReportsSingle);
   app.configure(presencesToday);
+  app.configure(presencesTodaySummary);
 };

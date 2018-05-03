@@ -14,13 +14,16 @@ module.exports = function (app) {
   const params = { query: { $select: ['_id'], $nopaginate: true } }
   const docsOrganizatonsStr = request('GET', 'http://' + config.eakun.host + ':' + config.eakun.port + '/organizations?$select[]=$_id&$nopaginate=true')
   const docs = JSON.parse(docsOrganizatonsStr.body.toString())
-  const eventsName = docs.map(doc => 'organization_' + doc._id.toString())
+
+  var eventsNamePresences = docs.map(doc => 'organization_' + doc._id.toString())
+  var eventsNameTepatWaktu = docs.map(doc => 'organization_' + doc._id.toString() + '_tepat_waktu')
+  var eventsNameTerlambat = docs.map(doc => 'organization_' + doc._id.toString() + '_terlambat')
 
   const options = {
     name: 'presences',
     Model,
     paginate,
-    events: eventsName
+    events: [ ...eventsNamePresences, ...eventsNameTepatWaktu, ...eventsNameTerlambat ]
   };
 
   // Initialize our service with any options it requires
