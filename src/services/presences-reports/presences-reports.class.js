@@ -40,7 +40,7 @@ class Service {
           alpa: Number,
           dl: Number,
           cuti: Number,
-          ijin: Number,
+          izin: Number,
           sakit: Number
         }
       ]
@@ -282,7 +282,7 @@ class Service {
         alpa: 0,
         dl: 0,
         cuti: 0,
-        ijin: 0,
+        izin: 0,
         sakit: 0,
       }
 
@@ -323,7 +323,7 @@ class Service {
       // absences
       row.dl = countAbsence('Dinas Luar', user, docsAbsences)
       row.cuti = countAbsence('Cuti', user, docsAbsences)
-      row.ijin = countAbsence('Ijin', user, docsAbsences)
+      row.izin = countAbsence('Izin', user, docsAbsences)
       row.sakit = countAbsence('Sakit', user, docsAbsences)
 
       resData.push(row)
