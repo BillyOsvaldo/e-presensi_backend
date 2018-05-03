@@ -28,6 +28,10 @@ const presencesToday = require('./presences-today/presences-today.service.js');
 
 const presencesTodaySummary = require('./presences-today-summary/presences-today-summary.service.js');
 
+const settings = require('./settings/settings.service.js');
+
+const timesmanagement = require('./timesmanagement/timesmanagement.service.js');
+
 module.exports = function (app) {
   app.configure(presences);
   app.configure(users);
@@ -56,4 +60,6 @@ module.exports = function (app) {
   app.configure(presencesReportsSingle);
   app.configure(presencesToday);
   app.configure(presencesTodaySummary);
+  app.configure(settings);
+  app.configure(timesmanagement);
 };
