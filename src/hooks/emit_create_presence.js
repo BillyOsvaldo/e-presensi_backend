@@ -1,6 +1,8 @@
 const moment = require('moment')
 
 module.exports = (context) => {
+  if(context.result.already_exist) return
+
   const eventName = 'organization_' + context.params.organization
 
   const data = {
@@ -18,7 +20,6 @@ module.exports = (context) => {
   const timeInDateTime = new Date(currentDate + ' ' + configTimeIn)
 
   var eventCustom
-  console.log('fire ' + eventCustom)
   if(context.data.time < timeInDateTime) {
     eventCustom = eventName + '_tepat_waktu'
     context.service.emit(eventCustom, data)
