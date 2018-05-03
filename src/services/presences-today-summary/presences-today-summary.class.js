@@ -115,6 +115,7 @@ class Service {
     const countTerlambat = await getCountTerlambat(docsIds)
 
     const data = {
+      _id: '5ae88e1f72f0bb58be83bdac',
       tepat_waktu: countTepatWaktu,
       terlambat: countTerlambat,
       total: countUsers
