@@ -18,14 +18,12 @@ module.exports = (context) => {
   const timeInDateTime = new Date(currentDate + ' ' + configTimeIn)
 
   var eventCustom
-  if(context.data.mode == 1) {
-    console.log('fire ' + eventCustom)
-    if(context.data.time < timeInDateTime) {
-      eventCustom = eventName + '_tepat_waktu'
-      context.service.emit(eventCustom, data)
-    } else {
-      eventCustom = eventName + '_terlambat'
-      context.service.emit(eventCustom, data)
-    }
+  console.log('fire ' + eventCustom)
+  if(context.data.time < timeInDateTime) {
+    eventCustom = eventName + '_tepat_waktu'
+    context.service.emit(eventCustom, data)
+  } else {
+    eventCustom = eventName + '_terlambat'
+    context.service.emit(eventCustom, data)
   }
 }
