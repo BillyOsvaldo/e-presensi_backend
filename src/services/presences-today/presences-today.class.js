@@ -52,7 +52,8 @@ class Service {
             { user: { $in: usersIds } },
             { dayOfMonth: parseInt(date) },
             { month: parseInt(month) },
-            { year: parseInt(year) }
+            { year: parseInt(year) },
+            { mode: 1 }
           ]
         }
       },
