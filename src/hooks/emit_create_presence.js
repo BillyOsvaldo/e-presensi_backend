@@ -19,12 +19,14 @@ module.exports = (context) => {
   const currentDate = moment().format('YYYY-MM-DD')
   const timeInDateTime = new Date(currentDate + ' ' + configTimeIn)
 
-  var eventCustom
-  if(context.data.time < timeInDateTime) {
-    eventCustom = eventName + '_tepat_waktu'
-    context.service.emit(eventCustom, data)
-  } else {
-    eventCustom = eventName + '_terlambat'
-    context.service.emit(eventCustom, data)
+  if(context.data.mode == 1) {
+    var eventCustom
+    if(context.data.time < timeInDateTime) {
+      eventCustom = eventName + '_tepat_waktu'
+      context.service.emit(eventCustom, data)
+    } else {
+      eventCustom = eventName + '_terlambat'
+      context.service.emit(eventCustom, data)
+    }
   }
 }
