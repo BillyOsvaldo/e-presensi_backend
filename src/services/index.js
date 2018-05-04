@@ -23,14 +23,11 @@ const absences = require('./absences/absences.service.js');
 const absencesmanagement = require('./absencesmanagement/absencesmanagement.service.js');
 const presencesReports = require('./presences-reports/presences-reports.service.js');
 const presencesReportsSingle = require('./presences-reports-single/presences-reports-single.service.js');
-
 const presencesToday = require('./presences-today/presences-today.service.js');
-
 const presencesTodaySummary = require('./presences-today-summary/presences-today-summary.service.js');
-
 const settings = require('./settings/settings.service.js');
-
 const timesmanagement = require('./timesmanagement/timesmanagement.service.js');
+const applists = require('./applists/applists.service.js');
 
 module.exports = function (app) {
   app.configure(presences);
@@ -62,4 +59,5 @@ module.exports = function (app) {
   app.configure(presencesTodaySummary);
   app.configure(settings);
   app.configure(timesmanagement);
+  app.configure(applists);
 };
