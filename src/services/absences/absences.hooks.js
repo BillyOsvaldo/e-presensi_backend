@@ -1,4 +1,5 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
+const absencesFastJoin = require('../../hooks/fastjoin/absences')
 
 module.exports = {
   before: {
@@ -13,11 +14,23 @@ module.exports = {
 
   after: {
     all: [],
-    find: [],
-    get: [],
-    create: [],
+    find: [
+      absencesFastJoin.user,
+      absencesFastJoin.absencestype
+    ],
+    get: [
+      absencesFastJoin.user,
+      absencesFastJoin.absencestype
+    ],
+    create: [
+      absencesFastJoin.user,
+      absencesFastJoin.absencestype
+    ],
     update: [],
-    patch: [],
+    patch: [
+      absencesFastJoin.user,
+      absencesFastJoin.absencestype
+    ],
     remove: []
   },
 

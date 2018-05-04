@@ -1,5 +1,3 @@
-const absencesFastJoin = require('../../hooks/fastjoin/absences')
-
 module.exports = {
   before: {
     all: [],
@@ -13,23 +11,11 @@ module.exports = {
 
   after: {
     all: [],
-    find: [
-      absencesFastJoin.user,
-      absencesFastJoin.absencestype
-    ],
-    get: [
-      absencesFastJoin.user,
-      absencesFastJoin.absencestype
-    ],
-    create: [
-      absencesFastJoin.user,
-      absencesFastJoin.absencestype
-    ],
+    find: [],
+    get: [],
+    create: [],
     update: [],
-    patch: [
-      absencesFastJoin.user,
-      absencesFastJoin.absencestype
-    ],
+    patch: [],
     remove: []
   },
 
