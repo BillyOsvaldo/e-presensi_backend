@@ -1,6 +1,7 @@
 const moment = require('moment')
+const getTimeInTimeOut = require('../helpers/get_time_in_time_out')
 
-module.exports = (context) => {
+module.exports = async (context) => {
   if(context.result.already_exist) return
 
   const eventName = 'organization_' + context.params.organization
@@ -15,7 +16,8 @@ module.exports = (context) => {
 
   context.service.emit(eventName, data)
 
-  const configTimeIn = context.app.get('time_in')
+  const { timeIn, timeOut } = await getTimeInTimeOut(context)
+  const configTimeIn = timeIn
   const currentDate = moment().format('YYYY-MM-DD')
   const timeInDateTime = new Date(currentDate + ' ' + configTimeIn)
 
