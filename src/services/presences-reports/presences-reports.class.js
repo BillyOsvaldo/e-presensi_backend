@@ -2,6 +2,7 @@ const { headers } = require('../../helpers/headers')
 const objectid = require('objectid')
 const moment = require('moment')
 const utils = require('../../helpers/utils')
+const getTimeInTimeOut = require('../../helpers/get_time_in_time_out')
 
 /* eslint-disable no-unused-vars */
 class Service {
@@ -46,8 +47,9 @@ class Service {
       ]
   */
   async find (params) {
-    const configTimeIn = this.app.get('time_in')
-    const configTimeOut = this.app.get('time_out')
+    const { timeIn, timeOut } = await getTimeInTimeOut(this)
+    const configTimeIn = timeIn
+    const configTimeOut = timeOut
 
     const Presences = this.app.service('presences').Model
     const Absences = this.app.service('absences').Model
