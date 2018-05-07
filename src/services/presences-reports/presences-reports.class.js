@@ -3,6 +3,7 @@ const objectid = require('objectid')
 const moment = require('moment')
 const utils = require('../../helpers/utils')
 const getTimeInTimeOut = require('../../helpers/get_time_in_time_out')
+const getTimeInTimeOutByMonth = require('../../helpers/get_time_in_time_out').getByMonth
 
 /* eslint-disable no-unused-vars */
 class Service {
@@ -47,14 +48,14 @@ class Service {
       ]
   */
   async find (params) {
-    const { timeIn, timeOut } = await getTimeInTimeOut(this)
-    const configTimeIn = timeIn
-    const configTimeOut = timeOut
-
     const Presences = this.app.service('presences').Model
     const Absences = this.app.service('absences').Model
     const users = params.client.service('users')
     const profiles = params.client.service('profiles')
+
+    const queryMonthPad = params.query.month.toString().padStart(2, '0')
+
+    const timeInTimeOutByMonth = await getTimeInTimeOutByMonth(queryMonthPad, params.query.year, this)
 
     const getDaysInMonth = (month, year) => {
       return new Date(year, month, 0).getDate()
@@ -222,7 +223,7 @@ class Service {
       return res
     }
 
-    const isTepatWaktu = (docInOut) => {
+    const isTepatWaktu = (docInOut, momentInConfig, momentOutConfig) => {
       if(!docInOut) return false
       if(!docInOut.modeIn) return false
       if(!docInOut.modeOut) return false
@@ -233,9 +234,6 @@ class Service {
       const momentIn = moment(momentInTimeOnly, 'HH:mm')
       const momentOut = moment(momentOutTimeOnly, 'HH:mm')
 
-      const momentInConfig = moment(configTimeIn, 'HH:mm')
-      const momentOutConfig = moment(configTimeOut, 'HH:mm')
-
       const tepatMasuk = momentIn.isBefore(momentInConfig)
       const tepatPulang = momentOutConfig.isBefore(momentOut)
 
@@ -244,14 +242,13 @@ class Service {
       return false
     }
 
-    const isTelat = (docInOut) => {
+    const isTelat = (docInOut, momentInConfig) => {
       if(!docInOut) return false
       if(!docInOut.modeIn) return false
       if(!docInOut.modeOut) return false
 
       const momentInTimeOnly = moment(docInOut.modeIn).format('HH:mm')
       const momentIn = moment(momentInTimeOnly, 'HH:mm')
-      const momentInConfig = moment(configTimeIn, 'HH:mm')
       const telatMasuk = momentInConfig.isBefore(momentIn)
       return telatMasuk
     }
@@ -265,7 +262,7 @@ class Service {
 
     const docsAbsences = await Absences.aggregate(aggregateAbsencesData)
     const docsPresences = await Presences.aggregate(aggregatePresencesData)
-    const daysInMonth = getDaysInMonth(params.query.month, params.query.year)
+    const daysInMonth = getDaysInMonth(queryMonthPad, params.query.year)
 
     var resData = []
     for(let user of usersIds) {
@@ -298,7 +295,7 @@ class Service {
         // format $day is 01, 02, 03 ... 30, 31
         let day = dateCounter.toString().padStart(2, '0')
         // format $dateArg is 2018-04-30
-        let dateArg = `${params.query.year}-${params.query.month}-${day}`
+        let dateArg = `${params.query.year}-${queryMonthPad}-${day}`
         let docInOut = getPresenceByDate(new Date(dateArg), user, docsPresences)
 
         if(!docInOut) { // if null then current user is alpha
@@ -306,13 +303,17 @@ class Service {
           continue
         }
 
-        if(isTepatWaktu(docInOut)) {
+        let timeInTimeOut = timeInTimeOutByMonth[dateCounter]
+        let momentInConfig = moment(timeInTimeOut.timeIn, 'HH:mm')
+        let momentOutConfig = moment(timeInTimeOut.timeOut, 'HH:mm')
+
+        if(isTepatWaktu(docInOut, momentInConfig, momentOutConfig)) {
           row.tepat_waktu++
           continue
         }
 
-        if(isTelat(docInOut)) {
-           row.telat++
+        if(isTelat(docInOut, momentInConfig)) {
+          row.telat++
           continue
         }
 
