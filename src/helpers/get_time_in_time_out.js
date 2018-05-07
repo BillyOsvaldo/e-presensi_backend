@@ -20,22 +20,26 @@ const moment = require('moment')
 
 */
 
-module.exports = async (context) => {
+const getDaysInMonth = (month, year) => {
+  return new Date(year, month, 0).getDate()
+}
+
+const getTimeInTimeOut = async (context, currentDateStr = null) => {
   var ret = { timeIn: null, timeOut: null }
   const timesManagement = context.app.service('timesmanagement')
   const TimesManagement = timesManagement.Model
   const Settings = context.app.service('settings').Model
 
-  const currentDate = moment().format('YYYY-MM-DD')
+  if(currentDateStr === null)
+    currentDateStr = moment().format('YYYY-MM-DD')
 
   const query = {
     $and: [
-      { startDate: { $lte: new Date(currentDate + ' 00:00:00') } },
-      { endDate: { $gte: new Date(currentDate + ' 00:00:00') } }
+      { startDate: { $lte: new Date(currentDateStr + ' 00:00:00') } },
+      { endDate: { $gte: new Date(currentDateStr + ' 00:00:00') } }
     ]
   }
 
-  const params = { query }
   const docs = await TimesManagement.find(query)
   if(docs.length) {
     var doc = docs[0]
@@ -50,3 +54,32 @@ module.exports = async (context) => {
 
   return ret
 }
+
+/*
+  @return:
+    {
+      "1": { timeIn: '07.30', timeOut: '14.00' },
+      "2": { timeIn: '07.30', timeOut: '14.00' },
+      ...
+      "31": { timeIn: '08.30', timeOut: '14.00' }
+    }
+*/
+const getByMonth = async (monthPad, year, context) => {
+  var ret = []
+
+  const daysInMonth = getDaysInMonth(monthPad, year)
+  for(let dateCounter = 1; dateCounter <= daysInMonth; dateCounter++) {
+
+    // format $day is 01, 02, 03 ... 30, 31
+    let day = dateCounter.toString().padStart(2, '0')
+
+    const dateStr = year + '-' + monthPad + '-' + day
+    const timeInTimeOut = await getTimeInTimeOut(context, dateStr)
+    ret[dateCounter] = timeInTimeOut
+  }
+
+  return ret
+}
+
+module.exports = getTimeInTimeOut
+module.exports.getByMonth = getByMonth
