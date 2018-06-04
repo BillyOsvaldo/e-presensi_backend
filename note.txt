@@ -1,0 +1,12 @@
+Yg berkaitan dgn waktu:
+  presences: create
+  presences-today
+  presences-today-summary
+  presences-reports
+  presences-reports-single
+
+const getTimeInTimeOut = require('../../helpers/get_time_in_time_out')
+const { timeIn, timeOut } = await getTimeInTimeOut(context)
+
+
+/home/kominfo/work/kominfo/e-presensi_backend/src/hooks/emit_create_presence.js

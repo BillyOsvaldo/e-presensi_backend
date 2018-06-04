@@ -1,0 +1,62 @@
+[
+  { 
+      "_id" : "5a4c4c08cbf7231cdf7e909e", 
+      "name" : "Home", 
+      "icon" : "home", 
+      "to" : "/", 
+      "desc" : "Pusat Kelola Aplikasi", 
+      "color" : "blue-grey", 
+      "roles" : [
+
+      ], 
+      "permissions" : [
+
+      ], 
+      "order" : 1
+  },
+  { 
+      "_id" : "5a9ca9a64c97f3296362cd53", 
+      "name" : "Menu e-Akun", 
+      "icon" : "view_list", 
+      "to" : "/manages/menus", 
+      "desc" : "Kelola Menu Aplikasi e-Presensi", 
+      "color" : "teal", 
+      "roles" : [
+
+      ], 
+      "permissions" : [
+          "5aa208da9e6cd3757ca5a88f"
+      ], 
+      "order" : 4
+  },
+  { 
+      "_id" : "5ad94c55e22e532a42656ca8", 
+      "roles" : [
+
+      ], 
+      "permissions" : [
+          "5aa208da9e6cd3757ca5a88f"
+      ], 
+      "name" : "Mesin", 
+      "desc" : "Manajemen Mesin Presensi", 
+      "icon" : "devices", 
+      "color" : "red", 
+      "to" : "/manages/machines", 
+      "order" : 3
+  },
+  { 
+      "_id" : "5ad986ec4c2a105ed57be0ce", 
+      "roles" : [
+
+      ], 
+      "permissions" : [
+          "5a4b2059cbf7231cdf7e909a"
+      ], 
+      "name" : "Pengguna dalam Mesin", 
+      "desc" : "Manajemen pengguna dalam mesin presensi", 
+      "icon" : "group", 
+      "color" : "blue", 
+      "to" : "/manages/machinesusers", 
+      "order" : 2
+  }
+]

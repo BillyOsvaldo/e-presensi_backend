@@ -29,6 +29,8 @@ const settings = require('./settings/settings.service.js');
 const timesmanagement = require('./timesmanagement/timesmanagement.service.js');
 const applists = require('./applists/applists.service.js');
 
+const installation = require('./installation/installation.service.js');
+
 module.exports = function (app) {
   app.configure(presences);
   app.configure(users);
@@ -60,4 +62,5 @@ module.exports = function (app) {
   app.configure(settings);
   app.configure(timesmanagement);
   app.configure(applists);
+  app.configure(installation);
 };
