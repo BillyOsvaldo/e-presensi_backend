@@ -1,1 +1,2 @@
-- bug: findusersbyorganization paginate not working
+add new service shifts
+add new service shitfsmanagement

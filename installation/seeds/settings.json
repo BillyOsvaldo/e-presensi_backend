@@ -1,0 +1,14 @@
+[
+  { 
+      "_id" : "5aebb4d9d93eae376c5b4722", 
+      "name" : "Jam Masuk", 
+      "value" : "07.30", 
+      "type" : "timepicker"
+  },
+  { 
+      "_id" : "5aebb4dfd93eae376c5b4723", 
+      "name" : "Jam Keluar", 
+      "value" : "14.00", 
+      "type" : "timepicker"
+  }
+]

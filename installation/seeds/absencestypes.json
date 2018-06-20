@@ -1,0 +1,22 @@
+[
+  { 
+      "_id" : "5ae13c7c2a17e6171a05be42", 
+      "name" : "Dinas Luar", 
+      "desc" : "Kegiatan Dinas Luar Kota"
+  },
+  { 
+      "_id" : "5ae13c972a17e6171a05be43", 
+      "name" : "Cuti", 
+      "desc" : "Cuti"
+  },
+  { 
+      "_id" : "5ae13ca12a17e6171a05be44", 
+      "name" : "Izin", 
+      "desc" : "Izin"
+  },
+  { 
+      "_id" : "5ae13ca92a17e6171a05be45", 
+      "name" : "Sakit", 
+      "desc" : "Sakit"
+  }
+]
