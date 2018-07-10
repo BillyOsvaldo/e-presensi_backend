@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 module.exports = (context) => {
   var client = feathers()
   const eakunConfig = context.app.get('eakun')
-  const restUrl = 'http://' + eakunConfig.host + ':' + eakunConfig.port
+  const restUrl = eakunConfig.host
   const restClient = rest(restUrl)
   client.configure(restClient.fetch(fetch))
   context.params.client = client
@@ -14,7 +14,7 @@ module.exports = (context) => {
 module.exports.getClient = (app) => {
   var client = feathers()
   const eakunConfig = app.get('eakun')
-  const restUrl = 'http://' + eakunConfig.host + ':' + eakunConfig.port
+  const restUrl = eakunConfig.host
   const restClient = rest(restUrl)
   client.configure(restClient.fetch(fetch))
   return client
