@@ -39,8 +39,7 @@
     }
   },
   "eakun": {
-    "host": "localhost",
-    "port": 3030
+    "host": "https://localhost:3030"
   },
   "api_key": ["lf093i2jgjksop44"]
 }
