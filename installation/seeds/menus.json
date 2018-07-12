@@ -24,10 +24,7 @@
   { 
       "_id" : "5b46b963814bd3686049720f", 
       "roles" : [], 
-      "permissions" : [
-          "5a4b2047cbf7231cdf7e9099", 
-          "5aa208da9e6cd3757ca5a88"
-      ], 
+      "permissions" : [], 
       "name" : "Jenis Ketidakhadiran", 
       "desc" : "Manajemen Jenis Ketidakhadiran", 
       "icon" : "transfer_within_a_station", 
@@ -49,9 +46,7 @@
   { 
       "_id" : "5b46b963814bd36860497211", 
       "roles" : [], 
-      "permissions" : [
-          "5a4b2059cbf7231cdf7e909"
-      ], 
+      "permissions" : [], 
       "name" : "Kelola Ketidakhadiran", 
       "desc" : "Kelola Ketidakhadiran Pengguna", 
       "icon" : "description", 
@@ -73,10 +68,7 @@
   { 
       "_id" : "5b46b963814bd36860497213", 
       "roles" : [], 
-      "permissions" : [
-          "5a4b2047cbf7231cdf7e9099", 
-          "5aa208da9e6cd3757ca5a88"
-      ], 
+      "permissions" : [], 
       "name" : "Kelola Mesin", 
       "desc" : "Kelola Mesin Fingerprint", 
       "icon" : "devices", 
@@ -87,9 +79,7 @@
   { 
       "_id" : "5b46b963814bd36860497214", 
       "roles" : [], 
-      "permissions" : [
-          "5a4b2059cbf7231cdf7e909"
-      ], 
+      "permissions" : [], 
       "name" : "Pengguna dalam Mesin", 
       "desc" : "Kelola pengguna dalam mesin presensi", 
       "icon" : "group", 
@@ -110,12 +100,8 @@
   },
   { 
       "_id" : "5b46b963814bd36860497216", 
-      "roles" : [
-          "5a123107cbf7231cdf7e907"
-      ], 
-      "permissions" : [
-          "5a4b2059cbf7231cdf7e909"
-      ], 
+      "roles" : [], 
+      "permissions" : [], 
       "name" : "Executive Report", 
       "desc" : "Executive Report untuk Kepala Dinas / Kepala Daerah", 
       "icon" : "receipt", 
