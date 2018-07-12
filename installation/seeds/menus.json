@@ -1,62 +1,148 @@
 [
   { 
-      "_id" : "5a4c4c08cbf7231cdf7e909e", 
+      "_id" : "5ae12fae4c97f3296362cd55", 
       "name" : "Home", 
       "icon" : "home", 
       "to" : "/", 
       "desc" : "Pusat Kelola Aplikasi", 
       "color" : "blue-grey", 
-      "roles" : [
-
-      ], 
-      "permissions" : [
-
-      ], 
+      "roles" : [], 
+      "permissions" : [], 
       "order" : 1
   },
   { 
-      "_id" : "5a9ca9a64c97f3296362cd53", 
+      "_id" : "5ae130994c97f3296362cd56", 
       "name" : "Menu e-Akun", 
       "icon" : "view_list", 
       "to" : "/manages/menus", 
-      "desc" : "Kelola Menu Aplikasi e-Presensi", 
+      "desc" : "Kelola Menu Aplikasi e-Akun", 
       "color" : "teal", 
-      "roles" : [
-
-      ], 
-      "permissions" : [
-          "5aa208da9e6cd3757ca5a88f"
-      ], 
-      "order" : 4
+      "roles" : [], 
+      "permissions" : [], 
+      "order" : 18
   },
   { 
-      "_id" : "5ad94c55e22e532a42656ca8", 
-      "roles" : [
-
-      ], 
+      "_id" : "5b46b963814bd3686049720f", 
+      "roles" : [], 
       "permissions" : [
-          "5aa208da9e6cd3757ca5a88f"
+          "5a4b2047cbf7231cdf7e9099", 
+          "5aa208da9e6cd3757ca5a88"
       ], 
-      "name" : "Mesin", 
-      "desc" : "Manajemen Mesin Presensi", 
-      "icon" : "devices", 
-      "color" : "red", 
-      "to" : "/manages/machines", 
+      "name" : "Jenis Ketidakhadiran", 
+      "desc" : "Manajemen Jenis Ketidakhadiran", 
+      "icon" : "transfer_within_a_station", 
+      "color" : "purple", 
+      "to" : "/manages/absencestypes", 
+      "order" : 5
+  },
+  { 
+      "_id" : "5b46b963814bd36860497210", 
+      "roles" : [], 
+      "permissions" : [], 
+      "name" : "Ketidakhadiran", 
+      "desc" : "Daftar Ketidakhadiran Pengguna", 
+      "icon" : "directions_walk", 
+      "color" : "orange", 
+      "to" : "/absences", 
+      "order" : 6
+  },
+  { 
+      "_id" : "5b46b963814bd36860497211", 
+      "roles" : [], 
+      "permissions" : [
+          "5a4b2059cbf7231cdf7e909"
+      ], 
+      "name" : "Kelola Ketidakhadiran", 
+      "desc" : "Kelola Ketidakhadiran Pengguna", 
+      "icon" : "description", 
+      "color" : "cyan", 
+      "to" : "/manages/absences", 
+      "order" : 7
+  },
+  { 
+      "_id" : "5b46b963814bd36860497212", 
+      "roles" : [], 
+      "permissions" : [], 
+      "name" : "PresensiKu", 
+      "desc" : "Laporan Presensi Pengguna", 
+      "icon" : "touch_app", 
+      "color" : "deep-orange ", 
+      "to" : "/myreport", 
       "order" : 3
   },
   { 
-      "_id" : "5ad986ec4c2a105ed57be0ce", 
-      "roles" : [
-
-      ], 
+      "_id" : "5b46b963814bd36860497213", 
+      "roles" : [], 
       "permissions" : [
-          "5a4b2059cbf7231cdf7e909a"
+          "5a4b2047cbf7231cdf7e9099", 
+          "5aa208da9e6cd3757ca5a88"
+      ], 
+      "name" : "Kelola Mesin", 
+      "desc" : "Kelola Mesin Fingerprint", 
+      "icon" : "devices", 
+      "color" : "red", 
+      "to" : "/manages/machines", 
+      "order" : 8
+  },
+  { 
+      "_id" : "5b46b963814bd36860497214", 
+      "roles" : [], 
+      "permissions" : [
+          "5a4b2059cbf7231cdf7e909"
       ], 
       "name" : "Pengguna dalam Mesin", 
-      "desc" : "Manajemen pengguna dalam mesin presensi", 
+      "desc" : "Kelola pengguna dalam mesin presensi", 
       "icon" : "group", 
       "color" : "blue", 
       "to" : "/manages/machinesusers", 
-      "order" : 2
+      "order" : 9
+  },
+  { 
+      "_id" : "5b46b963814bd36860497215", 
+      "roles" : [], 
+      "permissions" : [], 
+      "name" : "Laporan", 
+      "desc" : "Kelola Laporan Absensi", 
+      "icon" : "description", 
+      "color" : "green", 
+      "to" : "/manages/reports", 
+      "order" : 10
+  },
+  { 
+      "_id" : "5b46b963814bd36860497216", 
+      "roles" : [
+          "5a123107cbf7231cdf7e907"
+      ], 
+      "permissions" : [
+          "5a4b2059cbf7231cdf7e909"
+      ], 
+      "name" : "Executive Report", 
+      "desc" : "Executive Report untuk Kepala Dinas / Kepala Daerah", 
+      "icon" : "receipt", 
+      "color" : "red darken-1", 
+      "to" : "/executivereports", 
+      "order" : 4
+  },
+  { 
+      "_id" : "5b46b963814bd36860497217", 
+      "roles" : [], 
+      "permissions" : [], 
+      "name" : "Pengaturan", 
+      "desc" : "Kelola Pengaturan E-Presensi", 
+      "icon" : "settings", 
+      "color" : "blue", 
+      "to" : "/manages/settings", 
+      "order" : 11
+  },
+  { 
+      "_id" : "5b46b963814bd36860497218", 
+      "roles" : [], 
+      "permissions" : [], 
+      "name" : "Pengelola Waktu", 
+      "desc" : "Pengelolaan Waktu Absensi", 
+      "icon" : "schedule", 
+      "color" : "red", 
+      "to" : "/manages/timesmanagement", 
+      "order" : 12
   }
 ]
