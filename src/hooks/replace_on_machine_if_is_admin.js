@@ -61,7 +61,7 @@ module.exports = async (context) => {
   const docUser = await getUser()
   const isAdmin = docUser.permissions.length
   if(isAdmin) {
-    await addTransactionRemove()
+    //await addTransactionRemove()
     await addTransactionAdd()
   }
 }
