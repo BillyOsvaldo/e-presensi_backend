@@ -68,10 +68,4 @@ app.configure(
   })
 );
 
-app.use(function(req, res, next) {
-  console.log(appHooks)
-  console.log(app)
-  next()
-})
-
 module.exports = app;
