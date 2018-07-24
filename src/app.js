@@ -41,9 +41,7 @@ app.configure(express.rest());
 
 
 app.configure(mongoose);
-app.configure(socketio({
-  wsEngine: 'uws'
-}));
+app.configure(socketio());
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
@@ -67,11 +65,5 @@ app.configure(
     allowedKeys: configuration()().api_key
   })
 );
-
-app.use(function(req, res, next) {
-  console.log(appHooks)
-  console.log(app)
-  next()
-})
 
 module.exports = app;

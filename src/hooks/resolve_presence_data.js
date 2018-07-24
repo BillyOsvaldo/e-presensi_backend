@@ -29,20 +29,18 @@ module.exports = async (context) => {
     return utils.getFullName(doc)
   }
 
-  /*
-  if current machine date is same as server date
-    then use server date
-  else
-    then user current machine date
-  */
   const decideDate = () => {
     const serverDate = new Date()
     const clientDate = getDateTime()
 
-    if(serverDate.getDate() == clientDate.getDate()) {
-      return serverDate
-    } else {
+    // if difference between client time and server time is under 10 seconds
+    // then use serverDate, else use clientDate
+    const diff = (+serverDate) - (+clientDate)
+    const diffAbs = Math.abs(diff) // in milliseconds
+    if(diffAbs > 10 * 1000) {
       return clientDate
+    } else {
+      return serverDate
     }
   }
 
