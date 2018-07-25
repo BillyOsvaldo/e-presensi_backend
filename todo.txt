@@ -1,6 +1,2 @@
 add new service shifts
 add new service shitfsmanagement
-
-(done) diff between fktime
-check how fk_time is formated
-push epres
