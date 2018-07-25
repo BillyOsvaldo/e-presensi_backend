@@ -5,8 +5,6 @@ module.exports = async (context) => {
   const currentTimestamp = Math.floor((+ new Date())/1000)
   const diff = Math.abs(fkTime - currentTimestamp)
 
-  const machines = context.app.service('machinesmanagement')
-
   context.data.is_match = Boolean(diff <= 3)
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
   console.log('fkTime', fkTime)
