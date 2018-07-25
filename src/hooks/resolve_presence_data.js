@@ -44,9 +44,19 @@ module.exports = async (context) => {
     }
   }
 
+  const fillStatus = async () => {
+    const Machines = context.app.service('machines').Model
+    const docMachine = await Machines.findOne({ organization: organization })
+    if(!docMachine) return false
+
+    const status = docMachine.is_match
+    return status
+  }
+
   const { id, organization, profileId } = await getUserIdAndOrganization()
   context.data.time = decideDate()
   context.data.user = id
+  context.data.status = await fillStatus(organization)
   context.params.organization = organization
   context.params.name = await getName(profileId)
 }

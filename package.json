@@ -17,14 +17,10 @@
     "lib": "src",
     "test": "test/"
   },
-  "engines": {
-    "node": "^9.0.0",
-    "yarn": ">= 0.18.0"
-  },
   "scripts": {
     "test": "yarn run eslint && yarn run mocha",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
-    "start": "node src/",
+    "start": "sleep 10 && nodemon src",
     "mocha": "mocha test/ --recursive --exit"
   },
   "dependencies": {
@@ -36,15 +32,17 @@
     "@feathersjs/errors": "^3.3.0",
     "@feathersjs/express": "^1.2.1",
     "@feathersjs/feathers": "^3.1.4",
-    "@feathersjs/rest-client": "^1.3.4",
+    "@feathersjs/rest-client": "^1.4.1",
     "@feathersjs/socketio": "^3.2.1",
     "@feathersjs/socketio-client": "^1.1.0",
+    "abortcontroller-polyfill": "^1.1.9",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
     "feathers-authentication": "^1.3.1",
     "feathers-cli": "^2.4.0",
     "feathers-hooks-common": "^4.11.0",
     "feathers-mongoose": "^6.1.0",
+    "feathers-rest": "^1.8.1",
     "helmet": "^3.12.0",
     "jwt-decode": "^2.2.0",
     "moment": "^2.22.1",
@@ -55,7 +53,6 @@
     "serve-favicon": "^2.5.0",
     "socket.io-client": "^2.1.0",
     "sync-request": "^6.0.0",
-    "uws": "^10.148.0",
     "winston": "^2.4.2"
   },
   "devDependencies": {
