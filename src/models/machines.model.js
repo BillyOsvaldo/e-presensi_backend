@@ -18,7 +18,8 @@ module.exports = function (app) {
     fk_bin_data_lib: { type: String }, // from machine
     firmware: { type: String }, // from machine
     firmware_filename: { type: String }, // from machine
-    fp_data_ver: { type: Number } // from machine
+    fp_data_ver: { type: Number }, // from machine
+    is_match: { type: Boolean }
   }, {
     timestamps: true,
     versionKey: false

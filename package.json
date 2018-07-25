@@ -36,7 +36,6 @@
     "@feathersjs/socketio": "^3.2.1",
     "@feathersjs/socketio-client": "^1.1.0",
     "abortcontroller-polyfill": "^1.1.9",
-    "axios": "^0.18.0",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
     "feathers-authentication": "^1.3.1",
@@ -51,12 +50,10 @@
     "node-fetch": "^2.1.2",
     "objectid": "^3.2.1",
     "passport-custom": "^1.0.5",
-    "request": "^2.87.0",
     "serve-favicon": "^2.5.0",
     "socket.io-client": "^2.1.0",
     "sync-request": "^6.0.0",
-    "winston": "^2.4.2",
-    "yetch": "^1.1.0"
+    "winston": "^2.4.2"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
