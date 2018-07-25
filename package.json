@@ -32,7 +32,7 @@
     "@feathersjs/errors": "^3.3.0",
     "@feathersjs/express": "^1.2.1",
     "@feathersjs/feathers": "^3.1.4",
-    "@feathersjs/rest-client": "^1.4.1",
+    "@feathersjs/rest-client": "1.3.4",
     "@feathersjs/socketio": "^3.2.1",
     "@feathersjs/socketio-client": "^1.1.0",
     "abortcontroller-polyfill": "^1.1.9",
