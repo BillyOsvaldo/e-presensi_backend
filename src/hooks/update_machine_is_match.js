@@ -8,4 +8,10 @@ module.exports = async (context) => {
   const machines = context.app.service('machines')
 
   context.data.is_match = Boolean(diff <= 3)
+  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+  console.log('fkTime', fkTime)
+  console.log('currentTimestamp', currentTimestamp)
+  console.log('diff', diff)
+  console.log('context.data.is_match', context.data.is_match)
+  console.log('ED ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 }
