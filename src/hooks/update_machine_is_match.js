@@ -4,8 +4,8 @@ const moment = require('moment')
 module.exports = async (context) => {
   // assumed fk_time is timestamp (in seconds)
   const fkTime = context.data.fk_time
-  const fkTimeTimestampJakarta = moment(fkTime, 'YYYYMMDDHHmmss').unix()
-  const fkTimeTimestampGlobal = fkTimeTimestampJakarta - (7 * 60 * 60)
+  const fkTimeTimestampGlobal = moment(fkTime, 'YYYYMMDDHHmmss').unix()
+  //const fkTimeTimestampGlobal = fkTimeTimestampJakarta - (7 * 60 * 60)
   const currentTimestamp = Math.floor((+ new Date()) / 1000)
   const diff = Math.abs(fkTimeTimestampGlobal - currentTimestamp)
 
