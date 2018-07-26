@@ -11,7 +11,10 @@ module.exports = function (app) {
       required: true
     },
     time: { type: Date, default: Date.now },
-    mode: { type: Number, required: true } // mode 1 = masuk, mode 2 = pulang
+    mode: { type: Number, required: true }, // mode 1 = masuk, mode 2 = pulang
+    // field status: wheter the presence is match between machine time and server time
+    // clone data from machines.is_match
+    status: { type: Boolean }
   }, {
     timestamps: false,
     versionKey: false

@@ -1,4 +1,4 @@
-
+const updateMachineIsMatch = require('../../hooks/update_machine_is_match')
 
 module.exports = {
   before: {
@@ -7,7 +7,7 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [],
+    patch: [ updateMachineIsMatch ],
     remove: []
   },
 
