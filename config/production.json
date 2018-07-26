@@ -1,4 +1,4 @@
 {
-  "host": "e-presensi-app.feathersjs.com",
+  "host": "https://api.e-presensi.purbalinggakab.go.id",
   "port": "PORT"
 }

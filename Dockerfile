@@ -1,18 +1,29 @@
-FROM node:9.3
+FROM node:9.7
+# set time +7
+RUN mv /etc/localtime /etc/localtime.bak
+RUN ln -s /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 
-RUN mkdir -p /app
-WORKDIR /app
+RUN npm install -g yarn
+RUN npm install -g nodemon
 
-COPY config /app
-COPY installation /app
-COPY public /app
-COPY src /app
-COPY test /app
-COPY package.json /app
+# Create app directory
+WORKDIR /usr/src/app
 
-RUN npm -g install nodemon
+ENV APP_DIR /usr/src/app
 
-# install npm dependency
-RUN npm install
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
-CMD ["yarn", "start"]
+ENV NODE_ENV 'production'
+ENV PORT '3030'
+
+RUN yarn install --production
+
+COPY . ./
+
+RUN chmod +x ./entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
+
+CMD [ "yarn", "start" ]
