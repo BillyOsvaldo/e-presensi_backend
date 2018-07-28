@@ -29,6 +29,14 @@ set_config() {
   sed -i 's@EAKUN_HOST@'"$EAKUN_HOST"'@' $CONFIG_DEFAULT
   echo 'set API_KEY'
   sed -i 's@API_KEY@'"$API_KEY"'@' $CONFIG_DEFAULT
+  echo 'set AMQP_USER'
+  sed -i 's@AMQP_USER@'"$AMQP_USER"'@' $CONFIG_DEFAULT
+  echo 'set AMQP_PASS'
+  sed -i 's@AMQP_PASS@'"$AMQP_PASS"'@' $CONFIG_DEFAULT
+  echo 'set AMQP_URL'
+  sed -i 's@AMQP_URL@'"$AMQP_URL"'@' $CONFIG_DEFAULT
+  echo 'set AMQP_PORT'
+  sed -i 's@AMQP_PORT@'"$AMQP_PORT"'@' $CONFIG_DEFAULT
   echo 'set HOSTURL'
   sed -i 's@HOSTURL@'"$HOSTURL"'@' $CONFIG_PROD
 }

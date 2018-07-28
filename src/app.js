@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const logger = require('winston');
 
 const feathers = require('@feathersjs/feathers');
+const sync = require('feathers-sync');
 const configuration = require('@feathersjs/configuration');
 const express = require('@feathersjs/express');
 
@@ -41,7 +42,12 @@ app.configure(express.rest());
 
 
 app.configure(mongoose);
-app.configure(socketio());
+app.configure(socketio({
+  wsEngine: 'uws'
+}));
+app.configure(sync({
+  uri: app.get('amqp_uri')
+}));
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
