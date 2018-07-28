@@ -7,7 +7,7 @@ class Service {
 
   async find (params) {
     const data = [{
-      time: moment().format('YYYYMMDDHHmmss')
+      time: (+ new Date())
     }]
     return {total:1,limit:1,skip:0,data:data}
   }
