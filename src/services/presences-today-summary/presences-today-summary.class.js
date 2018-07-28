@@ -46,6 +46,7 @@ class Service {
       const query = {
         user: { $in: docsIds },
         mode: 1,
+        status: true,
         time: {
           $gt: dateTimeStart,
           $lte: dateTimeEnd
@@ -63,6 +64,7 @@ class Service {
       const query = {
         user: { $in: docsIds },
         mode: 1,
+        status: true,
         time: {
           $gt: dateTimeStart,
           $lte: dateTimeEnd
