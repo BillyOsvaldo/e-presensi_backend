@@ -9,7 +9,7 @@ module.exports = async (context) => {
   const currentTimestamp = Math.floor((+ new Date()) / 1000)
   const diff = Math.abs(fkTimeTimestampGlobal - currentTimestamp)
 
-  context.data.is_match = Boolean(diff <= 3)
+  context.data.is_match = Boolean(diff <= 5)
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
   console.log('fkTimeTimestampGlobal', fkTimeTimestampGlobal)
   console.log('currentTimestamp', currentTimestamp)
