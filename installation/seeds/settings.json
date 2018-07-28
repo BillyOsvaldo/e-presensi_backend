@@ -2,13 +2,22 @@
   { 
       "_id" : "5aebb4d9d93eae376c5b4722", 
       "name" : "Jam Masuk", 
-      "value" : "07.30", 
+      "value" : "07:30", 
+      "tag": "jam_masuk",
       "type" : "timepicker"
   },
   { 
       "_id" : "5aebb4dfd93eae376c5b4723", 
       "name" : "Jam Keluar", 
-      "value" : "14.00", 
+      "value" : "14:00", 
+      "tag": "jam_keluar",
       "type" : "timepicker"
+  },
+  { 
+      "_id" : "5aebb4dfd93eae376c5b4724", 
+      "name" : "Interval Sinkron", 
+      "value" : "5", 
+      "tag": "interval_synchron",
+      "type" : "-"
   }
 ]

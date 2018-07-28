@@ -10,6 +10,7 @@ module.exports = function (app) {
   const settings = new Schema({
     name: { type: String, required: true },
     value: { type: String, required: true },
+    tag: { type: String, default: '' },
     type: { type: String }
   }, {
     timestamps: true
