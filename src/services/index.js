@@ -28,6 +28,7 @@ const presencesTodaySummary = require('./presences-today-summary/presences-today
 const settings = require('./settings/settings.service.js');
 const timesmanagement = require('./timesmanagement/timesmanagement.service.js');
 const applists = require('./applists/applists.service.js');
+const timeserver = require('./timeserver/timeserver.service.js');
 
 const installation = require('./installation/installation.service.js');
 
@@ -63,4 +64,5 @@ module.exports = function (app) {
   app.configure(timesmanagement);
   app.configure(applists);
   app.configure(installation);
+  app.configure(timeserver);
 };
