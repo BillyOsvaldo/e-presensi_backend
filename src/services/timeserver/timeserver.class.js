@@ -9,7 +9,7 @@ class Service {
     const data = {
       time: moment().format('YYYYMMDDHHmmss')
     }
-    return {total:1,limit:1,skip:1,data:data}
+    return {total:1,limit:1,skip:0,data:data}
   }
 
   setup(app) {
