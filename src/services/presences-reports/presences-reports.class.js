@@ -104,7 +104,8 @@ class Service {
           time: 1,
           mode: 1,
           month: { $month: '$time'},
-          year: { $year: '$time'}
+          year: { $year: '$time'},
+          status: 1
         }
       },
       {
@@ -112,7 +113,8 @@ class Service {
           $and: [
             { user: { $in: usersIds } },
             { month: parseInt(params.query.month) },
-            { year: parseInt(params.query.year) }
+            { year: parseInt(params.query.year) },
+            { status: true }
           ]
         }
       }
