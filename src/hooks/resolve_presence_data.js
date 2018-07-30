@@ -57,6 +57,7 @@ module.exports = async (context) => {
   context.data.time = decideDate()
   context.data.user = id
   context.data.status = await fillStatus(organization)
+  context.params.status = context.data.status
   context.params.organization = organization
   context.params.name = await getName(profileId)
 }
