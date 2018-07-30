@@ -12,7 +12,8 @@ module.exports = async (context) => {
   const diff = Math.abs(fkTimeTimestampGlobal - currentTimestamp)
   const docIntervalSync = await Settings.findOne({ tag: 'interval_synchron' })
   const interval = (docIntervalSync ? docIntervalSync.value : 5)
-  console.log('interval', interval)
+  console.log('setting_interval', interval)
+  console.log('diff between machine and server', diff)
 
-  context.data.is_match = Boolean(diff <= 5)
+  context.data.is_match = Boolean(diff <= interval)
 }
