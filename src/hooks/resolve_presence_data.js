@@ -53,8 +53,14 @@ module.exports = async (context) => {
     return status
   }
 
+  const plus7hours = (dataDateTime) => {
+    dataDateTime.setTime(dataDateTime.getTime() + (7 * 60 * 60 * 1000))
+    return dataDateTime
+  }
+
   const { id, organization, profileId } = await getUserIdAndOrganization()
-  context.data.time = decideDate()
+  const dataDateTime = decideDate()
+  context.data.time = plus7hours(dataDateTime)
   context.data.user = id
   context.data.status = await fillStatus(organization)
   context.params.status = context.data.status
