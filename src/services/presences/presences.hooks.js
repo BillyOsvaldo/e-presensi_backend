@@ -2,6 +2,7 @@ const { authenticate } = require('feathers-authentication').hooks
 const resolvePresenceData = require('../../hooks/resolve_presence_data')
 const checkIfExist = require('../../hooks/check_presences')
 const emitEvent = require('../../hooks/emit_create_presence')
+const machineMatchTrueOrDie = require('../../hooks/machine_status_true_or_die')
 
 module.exports = {
   before: {
@@ -10,7 +11,7 @@ module.exports = {
       authenticate('jwt')
     ],
     get: [],
-    create: [ resolvePresenceData, checkIfExist ],
+    create: [ resolvePresenceData, checkIfExist, machineMatchTrueOrDie ],
     update: [],
     patch: [],
     remove: []
