@@ -54,11 +54,6 @@ module.exports = async (context) => {
     return status
   }
 
-  const plus7hours = (dataDateTime) => {
-    dataDateTime.setTime(dataDateTime.getTime() + (7 * 60 * 60 * 1000))
-    return dataDateTime
-  }
-
   const isCurrentUserAbsent = async (userId) => {
     const Absences = context.app.service('absences').Model
     const dateStr = moment().format('YYYY-MM-DD')
@@ -81,8 +76,7 @@ module.exports = async (context) => {
     context.result = { status: 'OK', _id: '5b5fd6ff4fcc250584b2c641', absent: 1 }
   }
 
-  const dataDateTime = decideDate()
-  context.data.time = plus7hours(dataDateTime)
+  context.data.time = decideDate()
   context.data.user = id
   context.data.status = await fillStatus(organization)
   context.params.status = context.data.status

@@ -49,7 +49,6 @@ class Service {
       const res = docsPresences.map(doc => {
         var resSingle = {}
         const momentDate = moment(doc.time)
-        momentDate.subtract({ hours: 7 })
         resSingle.id = doc._id
         resSingle.title = momentDate.format('HH:mm')
         resSingle.start = momentDate.format('YYYY-MM-DD')
