@@ -1,9 +1,11 @@
 const { headers } = require('../../helpers/headers')
 const objectid = require('objectid')
-const moment = require('moment')
+const moment = require('moment-timezone')
 const utils = require('../../helpers/utils')
 const getTimeInTimeOut = require('../../helpers/get_time_in_time_out')
 const getTimeInTimeOutByMonth = require('../../helpers/get_time_in_time_out').getByMonth
+
+moment.tz.setDefault('Asia/Jakarta')
 
 /* eslint-disable no-unused-vars */
 class Service {
@@ -236,6 +238,9 @@ class Service {
       const momentIn = moment(momentInTimeOnly, 'HH:mm')
       const momentOut = moment(momentOutTimeOnly, 'HH:mm')
 
+      console.log('momentIn.format("HH:mm")', momentIn.format("HH:mm"))
+      console.log('momentInConfig.format("HH:mm")', momentInConfig.format("HH:mm"))
+
       const tepatMasuk = momentIn.isBefore(momentInConfig)
       const tepatPulang = momentOutConfig.isBefore(momentOut)
 
@@ -298,7 +303,7 @@ class Service {
         let currentDate = (new Date()).getDate()
 
         // loop hanya sampai tanggal sekarang dibulan ini
-        if(dateCounter >= currentDate) break
+        if(dateCounter > currentDate) break
 
         // format $day is 01, 02, 03 ... 30, 31
         let day = dateCounter.toString().padStart(2, '0')
@@ -306,6 +311,7 @@ class Service {
         let dateArg = `${params.query.year}-${queryMonthPad}-${day}`
         let docInOut = getPresenceByDate(new Date(dateArg), user, docsPresences)
 
+        console.log('dateCounter', dateCounter, 'docInOut', docInOut)
         if(!docInOut) { // if null then current user is alpha
           row.alpa++
           continue

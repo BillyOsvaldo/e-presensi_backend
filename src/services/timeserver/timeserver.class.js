@@ -1,5 +1,7 @@
 const moment = require('moment')
 
+moment.tz.setDefault('Asia/Jakarta')
+
 class Service {
   constructor (options) {
     this.options = options || {}

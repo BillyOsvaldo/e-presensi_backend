@@ -3,6 +3,8 @@ const moment = require('moment')
 const objectid = require('objectid')
 const { headers } = require('../../helpers/headers')
 
+moment.tz.setDefault('Asia/Jakarta')
+
 /* eslint-disable no-unused-vars */
 class Service {
   constructor (options) {

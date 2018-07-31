@@ -17,14 +17,10 @@
     "lib": "src",
     "test": "test/"
   },
-  "engines": {
-    "node": "^9.0.0",
-    "yarn": ">= 0.18.0"
-  },
   "scripts": {
     "test": "yarn run eslint && yarn run mocha",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
-    "start": "node src/",
+    "start": "nodemon src/",
     "mocha": "mocha test/ --recursive --exit"
   },
   "dependencies": {
@@ -35,7 +31,7 @@
     "@feathersjs/configuration": "^1.0.2",
     "@feathersjs/errors": "^3.3.0",
     "@feathersjs/express": "^1.2.1",
-    "@feathersjs/feathers": "^3.1.4",
+    "@feathersjs/feathers": "^3.1.7",
     "@feathersjs/rest-client": "^1.3.4",
     "@feathersjs/socketio": "^3.2.1",
     "@feathersjs/socketio-client": "^1.1.0",
@@ -49,6 +45,7 @@
     "helmet": "^3.12.0",
     "jwt-decode": "^2.2.0",
     "moment": "^2.22.1",
+    "moment-timezone": "^0.5.21",
     "mongoose": "^5.0.14",
     "node-fetch": "^2.1.2",
     "objectid": "^3.2.1",
