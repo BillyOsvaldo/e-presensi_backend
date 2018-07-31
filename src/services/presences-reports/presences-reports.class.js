@@ -255,10 +255,16 @@ class Service {
       return telatMasuk
     }
 
-    const isPulangCepat = (docInOut) => {
+    const isPulangCepat = (docInOut, momentOutConfig) => {
       if(!docInOut) return false
 
-      return Boolean(docInOut.modeIn && !docInOut.modeOut)
+      const momentOutTimeOnly = moment(docInOut.modeOut).format('HH:mm')
+      const momentOut = moment(momentOutTimeOnly, 'HH:mm')
+
+      const hasNoPresentType2 = Boolean(docInOut.modeIn && !docInOut.modeOut)
+      const presentType2BeforeConfigOut = Boolean(docInOut.modeOut && momentOut.isBefore(momentOutConfig))
+
+      return hasNoPresentType2 || presentType2BeforeConfigOut
     }
 
 
@@ -316,10 +322,9 @@ class Service {
 
         if(isTelat(docInOut, momentInConfig)) {
           row.telat++
-          continue
         }
 
-        if(isPulangCepat(docInOut)) {
+        if(isPulangCepat(docInOut, momentOutConfig)) {
           row.pulang_cepat++
           continue
         }
