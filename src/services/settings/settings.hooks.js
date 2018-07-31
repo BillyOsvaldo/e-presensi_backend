@@ -1,5 +1,7 @@
 const moment = require('moment')
 
+moment.tz.setDefault('Asia/Jakarta')
+
 const min7hours = (context) => {
   const name = context.data.name
   if(name != 'Jam Masuk' && name != 'Jam Keluar') return

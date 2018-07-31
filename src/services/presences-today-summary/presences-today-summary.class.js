@@ -2,6 +2,8 @@ const moment = require('moment')
 const objectid = require('objectid')
 const getTimeInTimeOut = require('../../helpers/get_time_in_time_out')
 
+moment.tz.setDefault('Asia/Jakarta')
+
 /* eslint-disable no-unused-vars */
 class Service {
   constructor (options) {
