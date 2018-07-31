@@ -252,7 +252,6 @@ class Service {
     const isTelat = (docInOut, momentInConfig) => {
       if(!docInOut) return false
       if(!docInOut.modeIn) return false
-      if(!docInOut.modeOut) return false
 
       const momentInTimeOnly = moment(docInOut.modeIn).format('HH:mm')
       const momentIn = moment(momentInTimeOnly, 'HH:mm')
@@ -265,8 +264,10 @@ class Service {
 
       const momentOutTimeOnly = moment(docInOut.modeOut).format('HH:mm')
       const momentOut = moment(momentOutTimeOnly, 'HH:mm')
+      const dateIsNotToday = (moment(docInOut.modeIn).format('D') != (new Date).getDate())
+      console.log('dateIsNotToday', dateIsNotToday)
 
-      const hasNoPresentType2 = Boolean(docInOut.modeIn && !docInOut.modeOut)
+      const hasNoPresentType2 = Boolean(docInOut.modeIn && !docInOut.modeOut && dateIsNotToday)
       const presentType2BeforeConfigOut = Boolean(docInOut.modeOut && momentOut.isBefore(momentOutConfig))
 
       return hasNoPresentType2 || presentType2BeforeConfigOut
@@ -297,6 +298,8 @@ class Service {
         izin: 0,
         sakit: 0,
       }
+
+      console.log('--------------')
 
       // presences
       for(let dateCounter = 1; dateCounter <= daysInMonth; dateCounter++) {
@@ -332,7 +335,6 @@ class Service {
 
         if(isPulangCepat(docInOut, momentOutConfig)) {
           row.pulang_cepat++
-          continue
         }
       }
 
