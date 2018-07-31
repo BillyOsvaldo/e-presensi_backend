@@ -1,4 +1,16 @@
+const moment = require('moment')
 
+const min7hours = (context) => {
+  const name = context.data.name
+  if(name != 'Jam Masuk' && name != 'Jam Keluar') return
+
+  const val = context.data.value // e.g 07.30
+  const dateMoment = moment().format('YYYY-MM-DD')
+  const dateTimeMoment = moment(dateMoment + ' ' + val)
+  dateTimeMoment.subtract({ hours: 7 })
+
+  context.data.value = dateTimeMoment.format('HH:mm')
+}
 
 module.exports = {
   before: {
@@ -7,7 +19,7 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [],
+    patch: [ min7hours ],
     remove: []
   },
 
