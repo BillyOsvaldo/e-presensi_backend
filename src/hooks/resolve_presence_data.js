@@ -65,17 +65,17 @@ module.exports = async (context) => {
 
   const { id, organization, profileId } = await getUserIdAndOrganization()
 
+  context.data.time = decideDate()
+  context.data.user = id
+  context.params.organization = organization
+  context.params.name = await getName(profileId)
+
   context.data.status = true
-    console.log('------log isCurrentUserAbsent()')
+  console.log('------log isCurrentUserAbsent()')
   const currentUserAbsent = await isCurrentUserAbsent(id)
   console.log('id', id, 'currentUserAbsent', currentUserAbsent)
   if(currentUserAbsent) {
     context.data.status = false
     context.result = { status: 'OK', _id: '5b5fd6ff4fcc250584b2c641', absent: 1 }
   }
-
-  context.data.time = decideDate()
-  context.data.user = id
-  context.params.organization = organization
-  context.params.name = await getName(profileId)
 }
