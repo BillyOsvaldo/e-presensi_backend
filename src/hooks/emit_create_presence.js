@@ -2,6 +2,7 @@ const moment = require('moment')
 const getTimeInTimeOut = require('../helpers/get_time_in_time_out')
 
 module.exports = async (context) => {
+  console.log('context.params.status', context.params.status)
   if(context.result.already_exist || !context.params.status) return
 
   const eventName = 'organization_' + context.params.organization
