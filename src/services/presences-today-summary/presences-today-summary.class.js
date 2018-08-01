@@ -29,15 +29,19 @@ class Service {
     const getDocsUsers = async () => {
       var params2 = {
         query: {
-          organization: params.query.organization,
           $nopaginate: true,
-          $select: ['_id']
+          $select: ['_id', 'profile']
         },
         headers: params.headers
       }
 
+      if(params.query.organization) {
+        params2.query.organization = params.query.organization
+      }
+
       const docsUsers = await params.client.service('users').find(params2)
-      return docsUsers
+      const docsUsersNoAdmin = docsUsers.filter(doc => doc.profile)
+      return docsUsersNoAdmin
     }
 
     const getCountTepatWaktu = async (docsIds) => {
