@@ -45,19 +45,11 @@ module.exports = async (context) => {
     }
   }
 
-  const fillStatus = async () => {
-    const Machines = context.app.service('machines').Model
-    const docMachine = await Machines.findOne({ organization: organization })
-    if(!docMachine) return false
-
-    const status = docMachine.is_match
-    return status
-  }
-
   const isCurrentUserAbsent = async (userId) => {
     const Absences = context.app.service('absences').Model
     const dateStr = moment().format('YYYY-MM-DD')
-    const dateTimeStr = new Date(dateStr + ' 00:00:00')
+    // example: 2018-08-01T00:00:00Z
+    const dateTimeStr = new Date(dateStr + 'T00:00:00Z')
 
     const where = {
       user: userId,
@@ -65,21 +57,25 @@ module.exports = async (context) => {
       endDate: { $gte: dateTimeStr }
     }
 
+    console.log('where', where)
+
     const doc = await Absences.find(where)
     return Boolean(doc.length)
   }
 
   const { id, organization, profileId } = await getUserIdAndOrganization()
+
+  context.data.status = true
+    console.log('------log isCurrentUserAbsent()')
   const currentUserAbsent = await isCurrentUserAbsent(id)
-  console.log('currentUserAbsent', currentUserAbsent)
+  console.log('id', id, 'currentUserAbsent', currentUserAbsent)
   if(currentUserAbsent) {
+    context.data.status = false
     context.result = { status: 'OK', _id: '5b5fd6ff4fcc250584b2c641', absent: 1 }
   }
 
   context.data.time = decideDate()
   context.data.user = id
-  context.data.status = await fillStatus(organization)
-  context.params.status = context.data.status
   context.params.organization = organization
   context.params.name = await getName(profileId)
 }
