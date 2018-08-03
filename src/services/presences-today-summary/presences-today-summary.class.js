@@ -1,4 +1,4 @@
-const moment = require('moment')
+const moment = require('moment-timezone')
 const objectid = require('objectid')
 const getTimeInTimeOut = require('../../helpers/get_time_in_time_out')
 

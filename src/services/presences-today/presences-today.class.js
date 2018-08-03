@@ -1,5 +1,5 @@
 const utils = require('../../helpers/utils')
-const moment = require('moment')
+const moment = require('moment-timezone')
 const objectid = require('objectid')
 const { headers } = require('../../helpers/headers')
 
