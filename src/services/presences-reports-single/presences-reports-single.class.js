@@ -1,6 +1,6 @@
 const { headers } = require('../../helpers/headers')
 const objectid = require('objectid')
-const moment = require('moment')
+const moment = require('moment-timezone')
 
 moment.tz.setDefault('Asia/Jakarta')
 
