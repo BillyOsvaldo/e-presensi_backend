@@ -18,10 +18,11 @@
     "test": "test/"
   },
   "scripts": {
-    "test": "yarn run eslint && yarn run mocha",
+    "test-internal": "mocha test/internal --recursive --exit",
+    "test-rest": "mocha test/rest --recursive --exit",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
-    "start": "nodemon src/",
-    "mocha": "mocha test/ --recursive --exit"
+    "start": "node src/",
+    "mocha": "mocha test/internal --recursive --exit"
   },
   "dependencies": {
     "@feathersjs/authentication": "^2.1.4",
@@ -50,6 +51,8 @@
     "node-fetch": "^2.1.2",
     "objectid": "^3.2.1",
     "passport-custom": "^1.0.5",
+    "request": "^2.87.0",
+    "request-promise": "latest",
     "serve-favicon": "^2.5.0",
     "socket.io-client": "^2.1.0",
     "sync-request": "^6.0.0",
