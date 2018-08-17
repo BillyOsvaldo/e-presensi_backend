@@ -12,12 +12,15 @@ module.exports = function (app) {
   const client = require('../../hooks/client').getClient(app)
   const organizations = client.service('organizations')
   const params = { query: { $select: ['_id'], $nopaginate: true } }
-  const docsOrganizatonsStr = request('GET', config.eakun.host + '/organizations?$select[]=$_id&$nopaginate=true')
+  const docsOrganizatonsStr = request('GET',
+    config.eakun.host + '/organizations?$select[]=$_id&$nopaginate=true',
+    { headers: { 'x-api-key': config.api_key } }
+  )
   const docs = JSON.parse(docsOrganizatonsStr.body.toString())
 
-  var eventsNamePresences = docs.map(doc => 'organization_' + doc._id.toString())
-  var eventsNameTepatWaktu = docs.map(doc => 'organization_' + doc._id.toString() + '_tepat_waktu')
-  var eventsNameTerlambat = docs.map(doc => 'organization_' + doc._id.toString() + '_terlambat')
+  var eventsNamePresences = docs.data.map(doc => 'organization_' + doc._id.toString())
+  var eventsNameTepatWaktu = docs.data.map(doc => 'organization_' + doc._id.toString() + '_tepat_waktu')
+  var eventsNameTerlambat = docs.data.map(doc => 'organization_' + doc._id.toString() + '_terlambat')
 
   const options = {
     name: 'presences',

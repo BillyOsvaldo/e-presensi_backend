@@ -32,6 +32,8 @@ const timeserver = require('./timeserver/timeserver.service.js');
 
 const installation = require('./installation/installation.service.js');
 
+const specialtimes = require('./specialtimes/specialtimes.service.js');
+
 module.exports = function (app) {
   app.configure(presences);
   app.configure(users);
@@ -65,4 +67,5 @@ module.exports = function (app) {
   app.configure(applists);
   app.configure(installation);
   app.configure(timeserver);
+  app.configure(specialtimes);
 };

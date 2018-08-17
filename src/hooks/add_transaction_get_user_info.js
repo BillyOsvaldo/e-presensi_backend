@@ -12,7 +12,7 @@ module.exports = async (context) => {
     command: commandGetUserInfo,
     command_value: { user_id: context.data.username }
   }
-  await transactions.create(data)
+  await transactions.create(data, context.params)
 
   context.result.trans_id = inc
 }

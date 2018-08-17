@@ -1,16 +1,20 @@
 const { authenticate } = require('feathers-authentication').hooks
 const resolvePresenceData = require('../../hooks/resolve_presence_data')
-const checkIfExist = require('../../hooks/check_presences')
-const emitEvent = require('../../hooks/emit_create_presence')
+const { setMode } = require('../../hooks/presences')
+const emitCreatePresenceEvent = require('../../hooks/emit_create_presence_event')
+const permissions = require('../../hooks/permissions')
 
 module.exports = {
   before: {
-    all: [],
+    all: [ permissions.apiOrJWT ],
     find: [
       authenticate('jwt')
     ],
     get: [],
-    create: [ resolvePresenceData, checkIfExist ],
+    create: [
+      resolvePresenceData,
+      setMode
+    ],
     update: [],
     patch: [],
     remove: []
@@ -20,7 +24,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [ emitEvent ],
+    create: [ emitCreatePresenceEvent ],
     update: [],
     patch: [],
     remove: []

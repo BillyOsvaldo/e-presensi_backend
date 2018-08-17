@@ -1,23 +1,23 @@
 [
   { 
-      "_id" : "5aebb4d9d93eae376c5b4722", 
-      "name" : "Jam Masuk", 
-      "value" : "07:30", 
-      "tag": "jam_masuk",
-      "type" : "timepicker"
-  },
-  { 
-      "_id" : "5aebb4dfd93eae376c5b4723", 
-      "name" : "Jam Keluar", 
-      "value" : "14:00", 
-      "tag": "jam_keluar",
-      "type" : "timepicker"
-  },
-  { 
       "_id" : "5aebb4dfd93eae376c5b4724", 
       "name" : "Interval Sinkron", 
       "value" : "5", 
       "tag": "interval_synchron",
-      "type" : "-"
+      "type" : "string"
+  },
+  { 
+      "_id" : "5aebb4dfd93eae376c5b4725", 
+      "name" : "Toleransi Sebelum Waktu Masuk (dalam menit)", 
+      "value" : "90", 
+      "tag": "minute_before_time_in",
+      "type" : "string"
+  },
+  { 
+      "_id" : "5aebb4dfd93eae376c5b4726", 
+      "name" : "Toleransi Setelah Waktu Masuk (dalam menit)", 
+      "value" : "20", 
+      "tag": "minute_after_time_in",
+      "type" : "string"
   }
 ]

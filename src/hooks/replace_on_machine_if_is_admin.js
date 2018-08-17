@@ -8,7 +8,8 @@ module.exports = async (context) => {
 
   const getUser = async () => {
     const users = context.app.service('usersformachinesusers')
-    const doc = await users.get(context.data.user, { query: {} })
+    const params2 = { query: {} }
+    const doc = await users.get(context.data.user, { ...context.params, params2 })
     return doc
   }
 
@@ -19,8 +20,7 @@ module.exports = async (context) => {
 
     const getUsername = async () => {
       const users = context.params.client.service('users')
-      const profiles = context.params.client.service('profiles')
-      const docUser = await users.get(context.data.user)
+      const docUser = await users.get(context.data.user, context.params)
       const userId = docUser.username
       return { user_id: userId }
     }
@@ -31,7 +31,7 @@ module.exports = async (context) => {
       command: commandRemove,
       command_value: await getUsername()
     }
-    await transactions.create(data)
+    await transactions.create(data, context.params)
   }
 
   const addTransactionAdd = async () => {
@@ -42,8 +42,8 @@ module.exports = async (context) => {
     const getUsernameAndName = async () => {
       const users = context.params.client.service('users')
       const profiles = context.params.client.service('profiles')
-      const docUser = await users.get(context.data.user)
-      const docProfile = await profiles.get(docUser.profile)
+      const docUser = await users.get(context.data.user, context.params)
+      const docProfile = await profiles.get(docUser.profile, context.params)
       const userName = docProfile.name.first_name + ' ' + docProfile.name.last_name
       const userId = docUser.username
       return { user_id: userId, user_name: userName }
@@ -55,7 +55,7 @@ module.exports = async (context) => {
       command: commandAdd,
       command_value: await getUsernameAndName()
     }
-    await transactions.create(data)
+    await transactions.create(data, context.params)
   }
 
   const docUser = await getUser()

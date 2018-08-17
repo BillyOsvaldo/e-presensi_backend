@@ -4,7 +4,7 @@ const moment = require('moment')
   if today is between startDate and endDate
     then timeIn and timeOut is overriden
   else
-    then timeIn=settings.'Jam Masuk'
+    then timeIn=auto fill
 
   tes #1
     start date 05-05-2018 00:00:00
@@ -25,10 +25,16 @@ const getDaysInMonth = (month, year) => {
 }
 
 const getTimeInTimeOut = async (context, currentDateStr = null) => {
+
+  // FIXME FIXME
+  return {
+    timeIn: '07:30',
+    timeOut: '14:00'
+  }
+
   var ret = { timeIn: null, timeOut: null }
   const timesManagement = context.app.service('timesmanagement')
   const TimesManagement = timesManagement.Model
-  const Settings = context.app.service('settings').Model
 
   if(currentDateStr === null)
     currentDateStr = moment().format('YYYY-MM-DD')
@@ -41,13 +47,14 @@ const getTimeInTimeOut = async (context, currentDateStr = null) => {
   }
 
   const docs = await TimesManagement.find(query)
+  console.log('docs', docs)
   if(docs.length) {
     var doc = docs[0]
     ret.timeIn = doc.timeIn
     ret.timeOut = doc.timeOut
   } else {
-    var docTimeIn = await Settings.findOne({ name: 'Jam Masuk' })
-    var docTimeOut = await Settings.findOne({ name: 'Jam Keluar' })
+    var docTimeIn = '07:30'
+    var docTimeOut = '14:00'
     ret.timeIn = docTimeIn.value
     ret.timeOut = docTimeOut.value
   }

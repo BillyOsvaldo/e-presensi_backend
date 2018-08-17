@@ -1,8 +1,9 @@
+const permissions = require('../../hooks/permissions')
 const autoUpdateMachinesUsersStatus = require('../../hooks/auto_update_status_machines_users')
 
 module.exports = {
   before: {
-    all: [],
+    all: [ permissions.apiOrJWT ],
     find: [],
     get: [],
     create: [],

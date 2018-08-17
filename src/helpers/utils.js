@@ -1,4 +1,6 @@
 module.exports.getFullName = (docProfile) => {
+  if(!docProfile.name) return ''
+
   let name = docProfile.name
 
   var firstTitle

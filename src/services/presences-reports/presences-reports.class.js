@@ -4,6 +4,7 @@ const moment = require('moment-timezone')
 const utils = require('../../helpers/utils')
 const getTimeInTimeOut = require('../../helpers/get_time_in_time_out')
 const getTimeInTimeOutByMonth = require('../../helpers/get_time_in_time_out').getByMonth
+const getParamsWithHeader = require('../../helpers/get_params_with_header')
 
 moment.tz.setDefault('Asia/Jakarta')
 
@@ -69,11 +70,10 @@ class Service {
           organization: params.query.organization,
           $nopaginate: true,
           $select: ['_id', 'position']
-        },
-        headers: params.headers
+        }
       }
 
-      const docsUsers = await params.client.service('users').find(params2)
+      const docsUsers = await params.client.service('users').find({ ...params, ...params2 })
       return docsUsers
     }
 
@@ -81,8 +81,7 @@ class Service {
       const getOrderByUserId = async (positionId) => {
         if(!positionId) return 999999
 
-        var params2 = { headers: params.headers }
-        const docsOrgStru = await params.client.service('organizationstructures').get(positionId, params2)
+        const docsOrgStru = await params.client.service('organizationstructures').get(positionId, params)
         const order = docsOrgStru.order
         return order
       }
@@ -265,7 +264,6 @@ class Service {
       const momentOutTimeOnly = moment(docInOut.modeOut).format('HH:mm')
       const momentOut = moment(momentOutTimeOnly, 'HH:mm')
       const dateIsNotToday = (moment(docInOut.modeIn).format('D') != (new Date).getDate())
-      console.log('dateIsNotToday', dateIsNotToday)
 
       const hasNoPresentType2 = Boolean(docInOut.modeIn && !docInOut.modeOut && dateIsNotToday)
       const presentType2BeforeConfigOut = Boolean(docInOut.modeOut && momentOut.isBefore(momentOutConfig))
@@ -273,6 +271,13 @@ class Service {
       return hasNoPresentType2 || presentType2BeforeConfigOut
     }
 
+    const queryMonthAndYearSameAsCurrentMonthAndYear = () => {
+      const queryMonth = parseInt(params.query.month)
+      const queryYear = parseInt(params.query.year)
+      const currentMonth = moment().format('M')
+      const currentYear = moment().format('Y')
+      return (queryMonth == currentMonth) && (queryYear == currentYear)
+    }
 
     const docsAbsences = await Absences.aggregate(aggregateAbsencesData)
     const docsPresences = await Presences.aggregate(aggregatePresencesData)
@@ -280,10 +285,10 @@ class Service {
 
     var resData = []
     for(let user of usersIds) {
-      let docUser = await users.get(user)
+      let docUser = await users.get(user, getParamsWithHeader())
       if(!docUser.profile) continue
 
-      let docProfile = await profiles.get(docUser.profile)
+      let docProfile = await profiles.get(docUser.profile, getParamsWithHeader())
       if(!docProfile._id) continue
 
       var row = {
@@ -299,14 +304,12 @@ class Service {
         sakit: 0,
       }
 
-      console.log('--------------')
-
       // presences
       for(let dateCounter = 1; dateCounter <= daysInMonth; dateCounter++) {
         let currentDate = (new Date()).getDate()
 
         // loop hanya sampai tanggal sekarang dibulan ini
-        if(dateCounter > currentDate) break
+        if(dateCounter > currentDate && queryMonthAndYearSameAsCurrentMonthAndYear()) break
 
         // format $day is 01, 02, 03 ... 30, 31
         let day = dateCounter.toString().padStart(2, '0')
@@ -314,7 +317,9 @@ class Service {
         let dateArg = `${params.query.year}-${queryMonthPad}-${day}`
         let docInOut = getPresenceByDate(new Date(dateArg), user, docsPresences)
 
-        console.log('dateCounter', dateCounter, 'docInOut', docInOut)
+        //if(docInOut.modeIn)
+        //  console.log('dateCounter', dateCounter, 'docInOut', docInOut)
+
         if(!docInOut) { // if null then current user is alpha
           row.alpa++
           continue

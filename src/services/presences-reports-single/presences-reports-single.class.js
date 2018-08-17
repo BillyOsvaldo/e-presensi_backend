@@ -71,6 +71,7 @@ class Service {
             absencestype: 1,
             startDate: 1,
             endDate: 1,
+            status: 1,
             month: { $month: '$startDate'},
             year: { $year: '$startDate'}
           }
@@ -80,7 +81,8 @@ class Service {
             $and: [
               { user: objectid(params.query.user) },
               { month: parseInt(params.query.month) },
-              { year: parseInt(params.query.year) }
+              { year: parseInt(params.query.year) },
+              { status: true }
             ]
           }
         },

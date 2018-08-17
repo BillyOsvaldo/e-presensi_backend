@@ -1,10 +1,11 @@
 const addTransactionAdd = require('../../hooks/add_transaction_add')
 const addTransactionRemove = require('../../hooks/add_transaction_remove')
 const autoAddMachineField = require('../../hooks/auto_add_machine_field')
+const permissions = require('../../hooks/permissions')
 
 module.exports = {
   before: {
-    all: [],
+    all: [ permissions.apiOrJWT ],
     find: [],
     get: [],
     create: [ autoAddMachineField.create ],

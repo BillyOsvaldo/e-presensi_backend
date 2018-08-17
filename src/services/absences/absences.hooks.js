@@ -1,9 +1,10 @@
+const permissions = require('../../hooks/permissions')
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const absencesFastJoin = require('../../hooks/fastjoin/absences')
 
 module.exports = {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [ permissions.apiOrJWT ],
     find: [],
     get: [],
     create: [],

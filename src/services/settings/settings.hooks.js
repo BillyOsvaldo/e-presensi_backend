@@ -1,4 +1,5 @@
 const moment = require('moment-timezone')
+const permissions = require('../../hooks/permissions')
 
 moment.tz.setDefault('Asia/Jakarta')
 
@@ -16,7 +17,7 @@ const min7hours = (context) => {
 
 module.exports = {
   before: {
-    all: [],
+    all: [ permissions.apiOrJWT ],
     find: [],
     get: [],
     create: [],

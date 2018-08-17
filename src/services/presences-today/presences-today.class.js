@@ -65,8 +65,8 @@ class Service {
 
     const docs = await Presences.aggregate(aggregateData)
     for(let doc of docs) {
-      let docUsers = await params.client.service('users').get(doc.user)
-      let docProfile = await params.client.service('profiles').get(docUsers.profile)
+      let docUsers = await params.client.service('users').get(doc.user, params)
+      let docProfile = await params.client.service('profiles').get(docUsers.profile, params)
       doc.name = utils.getFullName(docProfile)
 
       delete doc.dayOfMonth

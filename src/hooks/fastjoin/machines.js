@@ -12,7 +12,7 @@ module.exports.organization = (context) => {
           return
         }
 
-        const res = await client.service('organizationsmanagement').get(machine.organization)
+        const res = await client.service('organizationsmanagement').get(machine.organization, context.params)
 
         machine.organization = res
       },

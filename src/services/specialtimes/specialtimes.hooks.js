@@ -1,14 +1,14 @@
 const permissions = require('../../hooks/permissions')
-const updateMachineIsMatch = require('../../hooks/update_machine_is_match')
+const specialTimesHook = require('../../hooks/specialtimes_service')
 
 module.exports = {
   before: {
     all: [ permissions.apiOrJWT ],
     find: [],
     get: [],
-    create: [],
+    create: [ specialTimesHook.fillEndDate ],
     update: [],
-    patch: [ updateMachineIsMatch ],
+    patch: [],
     remove: []
   },
 

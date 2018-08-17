@@ -1,4 +1,5 @@
 const utils = require('../../helpers/utils')
+const getParamsWithHeader = require('../../helpers/get_params_with_header')
 
 /* eslint-disable no-unused-vars */
 class Service {
@@ -25,7 +26,7 @@ class Service {
         continue
       }
 
-      let docProfile = await profiles.get(doc.profile)
+      let docProfile = await profiles.get(doc.profile, getParamsWithHeader())
       doc.name = utils.getFullName(docProfile)
     }
 

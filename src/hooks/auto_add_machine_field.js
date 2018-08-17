@@ -1,10 +1,12 @@
+const getParamsWithHeader = require('../helpers/get_params_with_header')
 const errors = require('@feathersjs/errors')
 
 module.exports.create = async (context) => {
   const machines = context.app.service('machines')
 
   const params = { organization: context.data.organization, headers: context.params.headers }
-  const docMachineUser = (await machines.find(params)).data[0]
+  const docsMachinesUsers = await machines.find(getParamsWithHeader(params))
+  const docMachineUser = docsMachinesUsers.data[0]
 
   context.data.machine = docMachineUser._id
   context.data.dev_id = docMachineUser.dev_id

@@ -1,9 +1,12 @@
+const permissions = require('../../hooks/permissions')
+const timesManagementHook = require('../../hooks/timesmanagement_service')
+
 module.exports = {
   before: {
-    all: [],
+    all: [ permissions.apiOrJWT ],
     find: [],
     get: [],
-    create: [],
+    create: [ timesManagementHook.fillEndDate ],
     update: [],
     patch: [],
     remove: []

@@ -1,6 +1,7 @@
 const errors = require('@feathersjs/errors')
 const utils = require('../helpers/utils')
 const moment = require('moment')
+const getParamsWithHeader = require('../helpers/get_params_with_header')
 
 module.exports = async (context) => {
   const timeIo = context.data.time_io
@@ -20,13 +21,13 @@ module.exports = async (context) => {
 
   const getUserIdAndOrganization = async () => {
     const getusersbyusername = context.params.client.service('getusersbyusername')
-    const doc = await getusersbyusername.get(username)
-    return { id: doc._id, organization: doc.organization, profileId: doc.profile }
+    const doc = await getusersbyusername.get(username, getParamsWithHeader())
+    return { userId: doc._id, organization: doc.organization, profileId: doc.profile }
   }
 
   const getName = async (profileId) => {
     const profiles = context.params.client.service('profiles')
-    const doc = await profiles.get(profileId)
+    const doc = await profiles.get(profileId, getParamsWithHeader())
     return utils.getFullName(doc)
   }
 
@@ -45,39 +46,13 @@ module.exports = async (context) => {
     }
   }
 
-  const isCurrentUserAbsent = async (userId) => {
-    const Absences = context.app.service('absences').Model
-    const dateStr = moment().format('YYYY-MM-DD')
-    // example: 2018-08-01T00:00:00Z
-    const dateTimeStr = new Date(dateStr + 'T00:00:00Z')
-
-    const where = {
-      user: userId,
-      startDate: { $lte: dateTimeStr },
-      endDate: { $gte: dateTimeStr }
-    }
-
-    console.log('where', where)
-
-    const doc = await Absences.find(where)
-    return Boolean(doc.length)
-  }
-
-  const { id, organization, profileId } = await getUserIdAndOrganization()
+  const { userId, organization, profileId } = await getUserIdAndOrganization()
 
   context.data.time = decideDate()
-  context.data.user = id
+  context.data.user = userId
   context.params.organization = organization
   context.params.name = await getName(profileId)
 
   context.data.status = true
   context.params.status = context.data.status
-  console.log('------log isCurrentUserAbsent()')
-  const currentUserAbsent = await isCurrentUserAbsent(id)
-  console.log('id', id, 'currentUserAbsent', currentUserAbsent)
-  if(currentUserAbsent) {
-    context.data.status = false
-    context.params.status = false
-    context.result = { status: 'OK', _id: '5b5fd6ff4fcc250584b2c641', absent: 1 }
-  }
 }

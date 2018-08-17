@@ -6,8 +6,7 @@ module.exports = async (context) => {
 
   const getUsername = async () => {
     const users = context.params.client.service('users')
-    const profiles = context.params.client.service('profiles')
-    const docUser = await users.get(context.data.user)
+    const docUser = await users.get(context.data.user, context.params)
     const userId = docUser.username
     return { user_id: userId }
   }
@@ -18,5 +17,5 @@ module.exports = async (context) => {
     command: commandRemove,
     command_value: await getUsername()
   }
-  await transactions.create(data)
+  await transactions.create(data, context.params)
 }

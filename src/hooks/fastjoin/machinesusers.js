@@ -51,7 +51,7 @@ module.exports.fingersusers = (context) => {
 
         var params = JSON.parse(JSON.stringify(context.params)) // feathers bug
         params.query = { user: machineuser.user }
-        const res = await context.app.service('fingersusers').find(params)
+        const res = await context.app.service('fingersusers').find({ ...context.params, ...params })
 
         if(!res.total) return
 
