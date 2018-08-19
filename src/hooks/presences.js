@@ -152,6 +152,7 @@ module.exports.setMode = async (context) => {
   const presenceCountToday = await getPresenceCountToday(context.data.user, configTimeInOut, minuteBeforeTimeIn, context)
   const isAlreadyOut = presenceCountToday > 1
   if(isAlreadyOut) {
+    console.log(`create presence [failed]: user ${context.data.user}: isAlreadyOut`)
     context.result = CONTEXT_RESULT_IGNORE
     return
   }
@@ -163,10 +164,12 @@ module.exports.setMode = async (context) => {
 
   const mode = getMode(userTimeIn, configTimeInOut, wasAlreadyIn, minuteBeforeTimeIn, minuteAfterTimeIn)
   if(mode === null) {
+    console.log(`create presence [failed]: user ${context.data.user}: mode null`)
     context.result = CONTEXT_RESULT_IGNORE
     return
   }
 
+  console.log(`create presence [succcess]: user ${context.data.user}`)
   context.data.mode = mode
 }
 
