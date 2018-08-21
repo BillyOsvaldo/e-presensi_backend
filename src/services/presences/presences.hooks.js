@@ -1,6 +1,6 @@
 const { authenticate } = require('feathers-authentication').hooks
 const resolvePresenceData = require('../../hooks/resolve_presence_data')
-const { setMode } = require('../../hooks/presences')
+const { setModeManual } = require('../../hooks/presences')
 const emitCreatePresenceEvent = require('../../hooks/emit_create_presence_event')
 const permissions = require('../../hooks/permissions')
 
@@ -13,7 +13,7 @@ module.exports = {
     get: [],
     create: [
       resolvePresenceData,
-      setMode
+      setModeManual
     ],
     update: [],
     patch: [],

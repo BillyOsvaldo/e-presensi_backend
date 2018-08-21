@@ -60,7 +60,7 @@ const getDefaultTimeInOut = async (ctxDate, context) => {
 const getConfigTimeInOut = async (userId, ctxDate, context) => {
   const defautTimeInOut = await getDefaultTimeInOut(ctxDate, context)
   const { isUseSpecialTime, specialTimeInOut } = await getSpecialTime(userId, ctxDate, context)
-  const dateTodayStr = (MOCK_CURRENT_DATE ? MOCK_CURRENT_DATE : moment().format('YYYY-MM-DD'))
+  const dateTodayStr = (MOCK_CURRENT_DATE ? MOCK_CURRENT_DATE : moment(ctxDate).format('YYYY-MM-DD'))
 
   var timeIn, timeOut
 
@@ -143,9 +143,36 @@ const getSettingTolerance = async (context) => {
   return { minuteBeforeTimeIn: minuteBeforeTimeInDoc.value, minuteAfterTimeIn: minuteAfterTimeInDoc.value }
 }
 
+const getPresenceTodayWhereMode = async (userId, configTimeInOut, minuteBeforeTimeIn, context) => {
+  // get total docs when presences.mode 1 between (time-in minus tolerance-before) until (time-in plus MAX_WORK_HOUR hours)
+
+  // config
+  const ObjectId = context.app.get('mongooseClient').Types.ObjectId
+  const Presences = context.app.service('presences').Model
+
+  // setup data
+  const timeInMoment = configTimeInOut.timeIn.moment
+  const toleranceBefore = timeInMoment.clone().subtract(Math.abs(minuteBeforeTimeIn), 'minute')
+  const fromMoment = toleranceBefore
+  const untilMoment = timeInMoment.clone().add(MAX_WORK_HOUR, 'hour')
+
+  // exec
+  const where = {
+    time: {
+      $gte: fromMoment.format(),
+      $lte: untilMoment.format(),
+    },
+    user: ObjectId(context.data.user),
+    mode: context.data.mode
+  }
+
+  const count = await Presences.countDocuments(where)
+  return count
+}
+
 // ------------------------------------------------------------------------ module exposure
 
-module.exports.setMode = async (context) => {
+module.exports.setModeAuto = async (context) => {
   const { minuteBeforeTimeIn, minuteAfterTimeIn } = await getSettingTolerance(context)
   const ctxDate = moment().format('YYYY-MM-DD')
   const configTimeInOut = await getConfigTimeInOut(context.data.user, ctxDate, context)
@@ -171,6 +198,33 @@ module.exports.setMode = async (context) => {
 
   console.log(`create presence [succcess]: user ${context.data.user}`)
   context.data.mode = mode
+}
+
+module.exports.setModeManual = async (context) => {
+  const { minuteBeforeTimeIn, minuteAfterTimeIn } = await getSettingTolerance(context)
+  const currTimeMoment = moment(context.data.time, 'YYYYMMDDHHMMSS')
+  const ctxDate = currTimeMoment.format('YYYY-MM-DD')
+  const configTimeInOut = await getConfigTimeInOut(context.data.user, ctxDate, context)
+  const presenceCountToday = await getPresenceTodayWhereMode(context.data.user, configTimeInOut, minuteBeforeTimeIn, context)
+
+  if(!currTimeMoment.isBetween(configTimeInOut.timeIn.moment, configTimeInOut.timeOut.moment)) {
+    console.log(`create presence [failed]: user ${context.data.user}: wrong time.
+                 currTimeMoment: ${ currTimeMoment.format('YYYY-MM-DD HH:mm:ss') }
+                 configTimeInOut.timeIn.moment: ${ configTimeInOut.timeIn.moment.format('YYYY-MM-DD HH:mm:ss') }
+                 configTimeInOut.timeOut.moment: ${ configTimeInOut.timeOut.moment.format('YYYY-MM-DD HH:mm:ss') }
+    `)
+    context.result = CONTEXT_RESULT_IGNORE
+    return
+  }
+
+  // current user already in/out
+  if(Boolean(presenceCountToday)) {
+    console.log(`create presence [failed]: user ${context.data.user}: already in and out`)
+    context.result = CONTEXT_RESULT_IGNORE
+    return
+  }
+  
+  console.log(`create presence [success]: user ${context.data.user} on ${ currTimeMoment.format('YYYY-MM-DD HH:mm:ss') }`)
 }
 
 // !not used!
