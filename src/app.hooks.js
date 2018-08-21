@@ -1,10 +1,14 @@
 // Application hooks that run for every service
 const logger = require('./hooks/logger');
 const setClient = require('./hooks/client')
+const removeUnusedHeaders = require('./hooks/remove_unused_headers')
 
 module.exports = {
   before: {
-    all: [ logger(), setClient ],
+    all: [
+      setClient,
+      removeUnusedHeaders
+    ],
     find: [],
     get: [],
     create: [],
@@ -14,7 +18,7 @@ module.exports = {
   },
 
   after: {
-    all: [ logger() ],
+    all: [  ],
     find: [],
     get: [],
     create: [],
@@ -24,7 +28,7 @@ module.exports = {
   },
 
   error: {
-    all: [ logger() ],
+    all: [  ],
     find: [],
     get: [],
     create: [],
