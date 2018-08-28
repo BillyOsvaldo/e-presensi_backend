@@ -283,9 +283,23 @@ const getConfigTimeInOut = async (userId, ctxDate, context) => {
     timeOut = defautTimeInOut.timeOut
   }
 
+  const isConfigOutBeforeIn = () => {
+    const timeInMoment = moment(dateTodayStr + ' ' + timeIn)
+    const timeOutMoment = moment(dateTodayStr + ' ' + timeOut)
+
+    return timeOutMoment.isBefore(timeInMoment)
+  }
+
+  var timeOutDateStr
+  if(isConfigOutBeforeIn()) {
+    timeOutDateStr = moment(dateTodayStr).add(1, 'day').format('YYYY-MM-DD')
+  } else {
+    timeOutDateStr = dateTodayStr
+  }
+
   var res = {}
   res.timeIn = new EpresTime(dateTodayStr + ' ' + timeIn)
-  res.timeOut = new EpresTime(dateTodayStr + ' ' + timeOut)
+  res.timeOut = new EpresTime(timeOutDateStr + ' ' + timeOut)
   return res
 }
 
@@ -408,6 +422,43 @@ const getPresenceToday = async (userId, configTimeInOut, minuteBeforeTimeIn, con
   return doc
 }
 
+/*
+  find presences where user is current-user and time is between (ctxDate minus MAX_HOURS) and ctxDate
+*/
+const isContinuedFromYesterday = async (userId, currTimeMoment, context) => {
+  // config
+  const Presences = context.app.service('presences').Model
+  const from = currTimeMoment.clone().subtract(MAX_WORK_HOUR, 'hour')
+  const until = currTimeMoment.clone()
+
+  const where = {
+    time: {
+      $gte: from.format(),
+      $lte: until.format(),
+    },
+    user: objectid(context.data.user)
+  }
+
+  const docs = await Presences.find(where)
+  var docMode1, docMode2
+  for(let doc of docs) {
+    if(doc.mode == 1)
+      docMode1 = doc
+    else
+      docMode2 = doc
+  }
+
+  const alreadyInButNotOutYet = (docMode1 && !docMode2)
+  return alreadyInButNotOutYet
+}
+
+const isAlreadyInOrOut = (ctxMode, docsPresenceToday) => {
+  for(let doc of docsPresenceToday) {
+    if(ctxMode == doc.mode) return true
+  }
+  return false
+}
+
 // !broken!
 // !not-tested!
 const setModeAuto = async (context) => {
@@ -438,13 +489,6 @@ const setModeAuto = async (context) => {
   context.data.mode = mode
 }
 
-const isAlreadyInOrOut = (ctxMode, docsPresenceToday) => {
-  for(let doc of docsPresenceToday) {
-    if(ctxMode == doc.mode) return true
-  }
-  return false
-}
-
 const setModeManual = async (context) => {
   const { minuteBeforeTimeIn, minuteAfterTimeIn } = await getSettingTolerance(context)
   const currTimeMoment = moment(context.data.time, 'YYYYMMDDHHMMSS')
@@ -461,8 +505,9 @@ const setModeManual = async (context) => {
   const noPresenceToday = (!docsPresenceToday.length)
   const isModeOut = (context.data.mode == 2)
   const tryingOutBeforeIn = (isModeOut && noPresenceToday)
+  const continuedFromYesterday = await isContinuedFromYesterday(context.data.user, currTimeMoment, context)
 
-  if(tryingOutBeforeIn) {
+  if(tryingOutBeforeIn && !continuedFromYesterday) {
     console.log(`create presence [failed]: user ${context.data.user}: trying out before in`)
     context.result = CONTEXT_RESULT_IGNORE
     return
@@ -488,7 +533,10 @@ const setModeManual = async (context) => {
     timeToleranceAfterMoment = configTimeInOut.timeIn.moment.clone().add(MAX_WORK_HOUR, 'hour')
   }
 
-  if(!currTimeMoment.isBetween(timeToleranceBeforeMoment, timeToleranceAfterMoment, null, '[]')) {
+  const currentTimeIsBetweenToleranceBeforeAndAfter = currTimeMoment.isBetween(timeToleranceBeforeMoment,
+                                                                               timeToleranceAfterMoment, null, '[]')
+  if(!currentTimeIsBetweenToleranceBeforeAndAfter &&
+     !continuedFromYesterday) {
     console.log(`create presence [failed]: user ${context.data.user}: wrong time.
                  currTimeMoment: ${ currTimeMoment.format('DD-MM-YYYY HH:mm:ss') } is not between
                  timeToleranceBeforeMoment: ${ timeToleranceBeforeMoment.format('DD-MM-YYYY HH:mm:ss') } AND
