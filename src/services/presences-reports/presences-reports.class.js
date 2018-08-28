@@ -237,9 +237,6 @@ class Service {
       const momentIn = moment(momentInTimeOnly, 'HH:mm')
       const momentOut = moment(momentOutTimeOnly, 'HH:mm')
 
-      console.log('momentIn.format("HH:mm")', momentIn.format("HH:mm"))
-      console.log('momentInConfig.format("HH:mm")', momentInConfig.format("HH:mm"))
-
       const tepatMasuk = momentIn.isBefore(momentInConfig)
       const tepatPulang = momentOutConfig.isBefore(momentOut)
 
@@ -316,9 +313,6 @@ class Service {
         // format $dateArg is 2018-04-30
         let dateArg = `${params.query.year}-${queryMonthPad}-${day}`
         let docInOut = getPresenceByDate(new Date(dateArg), user, docsPresences)
-
-        //if(docInOut.modeIn)
-        //  console.log('dateCounter', dateCounter, 'docInOut', docInOut)
 
         if(!docInOut) { // if null then current user is alpha
           row.alpa++

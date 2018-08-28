@@ -67,4 +67,8 @@ app.configure(
   })
 );
 
+//create workdays for each organization before application is running
+const createWorkDaysIfNotExist = require('./helpers/create_workdays_if_not_exist')
+createWorkDaysIfNotExist(app)
+
 module.exports = app;

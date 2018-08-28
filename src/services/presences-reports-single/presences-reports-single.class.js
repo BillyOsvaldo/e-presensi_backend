@@ -1,67 +1,96 @@
 const { headers } = require('../../helpers/headers')
 const objectid = require('objectid')
 const moment = require('moment-timezone')
+const utils = require('../../helpers/utils')
 
 moment.tz.setDefault('Asia/Jakarta')
 
-/* eslint-disable no-unused-vars */
 class Service {
   constructor (options) {
     this.options = options || {}
   }
 
-  
-
-  // @provide params.user
   /*
-    {
-      user: objectid,
-      month: int,
-      year: int
-    }
+    @params
+      {
+        user: objectid,
+        month: int,
+        year: int
+      }
+
+    flow:
+      1. find all presences where date is between 1st day of current month until 2nd day of next month.
+         e.g: 01 aug 2018 - 02 sept 2018
+      2. 
   */
   async find (params) {
-    const getPresences = async () => {
-      const Presences = this.app.service('presences').Model
+    const hook = require('../../hooks/presences')
 
-      const aggregateData = [
-        {
-          $project: {
-            user: 1,
-            time: 1,
-            mode: 1,
-            month: { $month: '$time'},
-            year: { $year: '$time'},
-            status: 1
+    const getReportPresences = async () => {
+      const getDocsPresences = async () => {
+        const Presences = this.app.service('presences').Model
+        const { fromStr, untilStr } = utils.firstDayOfCurrMonthUntilSecondDayOfNextMonth(params.query.month, params.query.year)
+
+        const aggregateData = [
+          {
+            $match: {
+              $and: [
+                { user: objectid(params.query.user) },
+                {
+                  time: {
+                    $gte: new Date(fromStr),
+                    $lte: new Date(untilStr)
+                  }
+                },
+                { status: true }
+              ]
+            }
           }
-        },
-        {
-          $match: {
-            $and: [
-              { user: objectid(params.query.user) },
-              { month: parseInt(params.query.month) },
-              { year: parseInt(params.query.year) },
-              { status: true }
-            ]
+        ]
+
+        return await Presences.aggregate(aggregateData)
+      }
+
+      /*
+        @return: [
+          {
+            id: ObjectId
+            title: 07:30 String
+            start: 2018-12-31 String
+            className: mode-in|mode-out String
           }
+        ]
+      */
+      const getReportsPresencesTimeInOut = async (docsPresences, configTimeInOutMonth) => {
+        const MODE_IN = 1
+        const MODE_OUT = 2
+
+        var reportsPresences = []
+        const lastDateOfMonth = utils.getLastDatesOfMonth(params.query.month, params.query.year)
+        // 1, 2, 3... 31
+        for(let currentDateOfMonth = 1; currentDateOfMonth <= lastDateOfMonth; currentDateOfMonth++) {
+          let configTimeInOut = configTimeInOutMonth[currentDateOfMonth]
+
+          let reportPresenceModeIn = await hook.getTimeInOutFromPresence(MODE_IN, currentDateOfMonth,
+                                                                         docsPresences, configTimeInOut, this, params)
+          let reportPresenceModeOut = await hook.getTimeInOutFromPresence(MODE_OUT, currentDateOfMonth,
+                                                                          docsPresences, configTimeInOut, this, params)
+
+          if(reportPresenceModeIn !== null)
+            reportsPresences.push(reportPresenceModeIn)
+          if(reportPresenceModeOut !== null)
+            reportsPresences.push(reportPresenceModeOut)
         }
-      ]
+        return reportsPresences
+      }
 
-      const docsPresences = await Presences.aggregate(aggregateData)
-      const res = docsPresences.map(doc => {
-        var resSingle = {}
-        const momentDate = moment(doc.time)
-        resSingle.id = doc._id
-        resSingle.title = momentDate.format('HH:mm')
-        resSingle.start = momentDate.format('YYYY-MM-DD')
-        resSingle.className = (doc.mode == 1 ? 'mode-in' : 'mode-out')
-
-        return resSingle
-      })
-      return res
+      const docsPresences = await getDocsPresences()
+      const configTimeInOutMonth = await hook.getConfigTimeInOutMonth(params.query.user, this, params)
+      const reportsPresencesTimeInOut = await getReportsPresencesTimeInOut(docsPresences, configTimeInOutMonth)
+      return reportsPresencesTimeInOut
     }
 
-    const getAbsences = async () => {
+    const getReportAbsences = async () => {
       const Absences = this.app.service('absences').Model
 
       const aggregateData = [
@@ -118,9 +147,9 @@ class Service {
       return res
     }
 
-    const resPresences = await getPresences()
-    const resAbsences = await getAbsences()
-    const res = resPresences.concat(resAbsences)
+    const resReportPresences = await getReportPresences()
+    const resReportAbsences = await getReportAbsences()
+    const res = resReportPresences.concat(resReportAbsences)
 
     return {
       total: res.length,

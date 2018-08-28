@@ -34,6 +34,10 @@ const installation = require('./installation/installation.service.js');
 
 const specialtimes = require('./specialtimes/specialtimes.service.js');
 
+const workdays = require('./workdays/workdays.service.js');
+
+const workdaysmanagement = require('./workdaysmanagement/workdaysmanagement.service.js');
+
 module.exports = function (app) {
   app.configure(presences);
   app.configure(users);
@@ -68,4 +72,6 @@ module.exports = function (app) {
   app.configure(installation);
   app.configure(timeserver);
   app.configure(specialtimes);
+  app.configure(workdays);
+  app.configure(workdaysmanagement);
 };
