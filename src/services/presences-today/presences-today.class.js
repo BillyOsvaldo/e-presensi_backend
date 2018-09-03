@@ -43,9 +43,7 @@ class Service {
           user: 1,
           time: 1,
           mode: 1,
-          dayOfMonth: { $dayOfMonth: '$time'},
-          month: { $month: '$time'},
-          year: { $year: '$time'},
+          workDay: 1,
           status: 1
         }
       },
@@ -53,9 +51,7 @@ class Service {
         $match: {
           $and: [
             { user: { $in: usersIds } },
-            { dayOfMonth: parseInt(date) },
-            { month: parseInt(month) },
-            { year: parseInt(year) },
+            { workDay: new Date(utils.getTodayDateZeroTime()) },
             { status: true }
           ]
         }

@@ -91,3 +91,13 @@ module.exports.getWeekDays = () => {
     'sunday'
   ]
 }
+
+module.exports.getTodayDateZeroTime = () => {
+  const todayMoment = moment()
+  todayMoment.set({
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  })
+  return todayMoment.format('YYYY-MM-DD HH:mm:ss')
+}
