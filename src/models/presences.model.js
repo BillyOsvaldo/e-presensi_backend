@@ -12,7 +12,8 @@ module.exports = function (app) {
     },
     time: { type: Date, default: Date.now },
     mode: { type: Number, required: true }, // mode 1 = masuk, mode 2 = pulang
-    // status is true because current user is absent but he does create presence
+    workDay: { type: Date, required: true },
+    // status is true when current user is absent but he does create presence
     status: { type: Boolean }
   }, {
     timestamps: false,

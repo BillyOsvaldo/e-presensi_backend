@@ -459,6 +459,21 @@ const isAlreadyInOrOut = (ctxMode, docsPresenceToday) => {
   return false
 }
 
+const getWorkDay = (currTimeMoment, continuedFromYesterday, context) => {
+  var workDay = currTimeMoment.clone()
+
+  workDay.set({
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  })
+
+  if(continuedFromYesterday)
+    workDay.subtract(1, 'day')
+
+  return workDay
+}
+
 // !broken!
 // !not-tested!
 const setModeAuto = async (context) => {
@@ -546,7 +561,8 @@ const setModeManual = async (context) => {
     context.result = CONTEXT_RESULT_IGNORE
     return
   }
-  
+
+  context.data.workDay = getWorkDay(currTimeMoment, continuedFromYesterday, context)
   console.log(`create presence [success]: user ${context.data.user} on ${ currTimeMoment.format('DD-MM-YYYY HH:mm:ss') }`)
 }
 
