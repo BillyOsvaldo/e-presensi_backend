@@ -12,30 +12,7 @@ class Service {
   }
 
   async find (params) {
-    const datetime = new Date()
-    const momentDate = moment(datetime)
-    const date = momentDate.format('D')
-    const month = momentDate.format('M')
-    const year = momentDate.format('YYYY')
-
     const Presences = this.app.service('presences').Model
-
-    const getDocsUsers = async () => {
-      var params2 = {
-        query: {
-          organization: params.query.organization,
-          $nopaginate: true,
-          $select: ['_id', 'position']
-        },
-        headers: params.headers
-      }
-
-      const docsUsers = await params.client.service('users').find(params2)
-      return docsUsers
-    }
-
-    const docsUsers = await getDocsUsers()
-    const usersIds = docsUsers.map(doc => objectid(doc._id))
 
     const aggregateData = [
       {
@@ -50,7 +27,7 @@ class Service {
       {
         $match: {
           $and: [
-            { user: { $in: usersIds } },
+            { 'user.organizationuser.organization._id': objectid(params.query.organization) },
             { workDay: new Date(utils.getTodayDateZeroTime()) },
             { status: true }
           ]
@@ -59,17 +36,15 @@ class Service {
       { $sort: params.query.$sort || { time: -1 } }
     ]
 
-    const docs = await Presences.aggregate(aggregateData)
-    for(let doc of docs) {
-      let docUsers = await params.client.service('users').get(doc.user, params)
-      let docProfile = await params.client.service('profiles').get(docUsers.profile, params)
-      doc.name = utils.getFullName(docProfile)
+    const docsPresences = await Presences.aggregate(aggregateData)
+    for(let docPresence of docsPresences) {
+      docPresence.name = utils.getFullName(docPresence.user.profile)
 
-      delete doc.dayOfMonth
-      delete doc.month
-      delete doc.year
+      delete docPresence.dayOfMonth
+      delete docPresence.month
+      delete docPresence.year
     }
-    return docs
+    return docsPresences
   }
 
   setup(app) {

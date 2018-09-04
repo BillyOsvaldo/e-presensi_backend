@@ -27,30 +27,21 @@ class Service {
     const AbsencesTypes = this.app.service('absencestypes').Model
 
     const getDocsUsers = async () => {
-      var params2 = {
-        query: {
-          $nopaginate: true,
-          $select: ['_id', 'profile']
-        },
-        headers: params.headers
-      }
-
-      if(params.query.organization) {
-        params2.query.organization = params.query.organization
-      }
-
-      const docsUsers = await params.client.service('users').find(params2)
-      const docsUsersNoAdmin = docsUsers.filter(doc => doc.profile)
-      return docsUsersNoAdmin
+      const MachinesUsers = this.app.service('machinesusers').Model
+      const sort = { 'user.position.order': 1 }
+      const where = { 'user.organizationuser.organization._id': objectid(params.query.organization) }
+      const docsMachinesUsers = await MachinesUsers.find(where).sort(sort)
+      const docsUsers = docsMachinesUsers.map(doc => doc.user)
+      return docsUsers
     }
 
-    const getCountTepatWaktu = async (docsIds) => {
+    const getCountTepatWaktu = async () => {
       const currentDate = moment().format('YYYY-MM-DD')
       const dateTimeStart = new Date(currentDate + ' 04:00')
       const dateTimeEnd = new Date(currentDate + ' ' + configTimeIn)
 
       const query = {
-        user: { $in: docsIds },
+        'user.organizationuser.organization._id': objectid(params.query.organization),
         mode: 1,
         status: true,
         time: {
@@ -62,13 +53,13 @@ class Service {
       return Presences.count(query)
     }
 
-    const getCountTerlambat = async (docsIds) => {
+    const getCountTerlambat = async () => {
       const currentDate = moment().format('YYYY-MM-DD')
       const dateTimeStart = new Date(currentDate + ' ' + configTimeIn)
       const dateTimeEnd = new Date(currentDate + ' 23:59')
 
       const query = {
-        user: { $in: docsIds },
+        'user.organizationuser.organization._id': objectid(params.query.organization),
         mode: 1,
         status: true,
         time: {
@@ -80,7 +71,7 @@ class Service {
       return Presences.count(query)
     }
 
-    const getKetidakhadiran = async (docsIds) => {
+    const getKetidakhadiran = async () => {
       const absencestypes = this.app.service('absencestypes').Model
 
       const currentDate = moment().format('YYYY-MM-DD')
@@ -95,7 +86,7 @@ class Service {
 
       for(let doc of docs2) {
         let match = {
-          user: docsIds,
+          'user.organizationuser.organization._id': objectid(params.query.organization),
           absencestype: objectid(doc._id),
           $or: [
             {
@@ -121,21 +112,29 @@ class Service {
     }
 
     const docsUsers = await getDocsUsers()
-    const docsIds = docsUsers.map(doc => objectid(doc._id))
     const countUsers = docsUsers.length
-    const countTepatWaktu = await getCountTepatWaktu(docsIds)
-    const countTerlambat = await getCountTerlambat(docsIds)
+    const countTepatWaktu = await getCountTepatWaktu()
+    const countTerlambat = await getCountTerlambat()
 
     const data = {
       _id: '5ae88e1f72f0bb58be83bdac',
       tepat_waktu: countTepatWaktu,
       terlambat: countTerlambat,
-      total: countUsers
+      total: countUsers,
+      percentage: {}
     }
 
-    for(let doc of await getKetidakhadiran(docsIds)) {
+    data.belumDatang = (data.total - countTepatWaktu - countTerlambat)
+
+    for(let doc of await getKetidakhadiran()) {
       data[doc.slug] = doc.count
+      data.belumDatang = data.belumDatang - doc.count
+      data.percentage[doc.slug] = (doc.count / data.total * 100).toFixed(2) + '%'
     }
+
+    data.percentage.tepat_waktu = (data.tepat_waktu / data.total * 100).toFixed(2) + '%'
+    data.percentage.terlambat   = (data.terlambat / data.total * 100).toFixed(2) + '%'
+    data.percentage.belumDatang = (data.belumDatang / data.total * 100).toFixed(2) + '%'
 
     return {
       total: 1,

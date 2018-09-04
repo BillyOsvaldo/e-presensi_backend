@@ -1,7 +1,7 @@
 const permissions = require('../../hooks/permissions')
-const addTransactionGetUserInfo = require('../../hooks/add_transaction_get_user_info')
 const { updateIfExist } = require('../../hooks/fingers_users.service')
 const replaceOnMachineIfIsAdmin = require('../../hooks/replace_on_machine_if_is_admin')
+const resolveUser = require('../../hooks/resolve_user')
 
 module.exports = {
   before: {
@@ -10,7 +10,8 @@ module.exports = {
     get: [],
     create: [
       replaceOnMachineIfIsAdmin,
-      updateIfExist
+      updateIfExist,
+      resolveUser
     ],
     update: [],
     patch: [],
@@ -21,9 +22,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [
-      //addTransactionGetUserInfo
-    ],
+    create: [],
     update: [],
     patch: [],
     remove: []

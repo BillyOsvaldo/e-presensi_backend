@@ -3,6 +3,7 @@ const resolvePresenceData = require('../../hooks/resolve_presence_data')
 const { setModeManual } = require('../../hooks/presences')
 const emitCreatePresenceEvent = require('../../hooks/emit_create_presence_event')
 const permissions = require('../../hooks/permissions')
+const resolveUser = require('../../hooks/resolve_user')
 
 module.exports = {
   before: {
@@ -13,7 +14,8 @@ module.exports = {
     get: [],
     create: [
       resolvePresenceData,
-      setModeManual
+      setModeManual,
+      resolveUser
     ],
     update: [],
     patch: [],

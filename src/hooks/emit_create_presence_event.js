@@ -10,7 +10,7 @@ module.exports = async (context) => {
     _id: context.result._id,
     name: context.params.name,
     time: context.data.time,
-    user: context.data.user,
+    user: context.data.user._id,
     mode: parseInt(context.data.mode)
   }
 

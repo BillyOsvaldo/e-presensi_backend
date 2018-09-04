@@ -7,10 +7,8 @@ module.exports = async (context) => {
   const getUsernameAndName = async () => {
     const users = context.params.client.service('users')
     const profiles = context.params.client.service('profiles')
-    const docUser = await users.get(context.data.user, context.params)
-    const docProfile = await profiles.get(docUser.profile, context.params)
-    const userName = docProfile.name.first_name + ' ' + docProfile.name.last_name
-    const userId = docUser.username
+    const userName = context.data.user.profile.name.first_name + ' ' + context.data.user.profile.name.last_name
+    const userId = context.data.user.username
     return { user_id: userId, user_name: userName }
   }
 

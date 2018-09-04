@@ -15,24 +15,20 @@ module.exports = {
     all: [],
     find: [
       machinesUsersFastJoin.machine,
-      machinesUsersFastJoin.fingersusers,
-      machinesUsersFastJoin.user
+      machinesUsersFastJoin.fingersusers
     ],
     get: [
       machinesUsersFastJoin.machine,
-      machinesUsersFastJoin.fingersusers,
-      machinesUsersFastJoin.user
+      machinesUsersFastJoin.fingersusers
     ],
     create: [
       machinesUsersFastJoin.machine,
-      machinesUsersFastJoin.fingersusers,
-      machinesUsersFastJoin.user
+      machinesUsersFastJoin.fingersusers
     ],
     update: [],
     patch: [
       machinesUsersFastJoin.machine,
-      machinesUsersFastJoin.fingersusers,
-      machinesUsersFastJoin.user
+      machinesUsersFastJoin.fingersusers
     ],
     remove: []
   },

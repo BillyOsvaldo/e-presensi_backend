@@ -13,7 +13,7 @@ specialTimesHook.fillEndDate = async context => {
   const SpecialTimes = specialtimes.Model
 
   const where = {
-    user: context.data.user,
+    'user._id': context.data.user,
     endDate: new Date('3000-01-01')
   }
   const lastDoc = await SpecialTimes.findOne(where)

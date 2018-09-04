@@ -1,13 +1,14 @@
 const permissions = require('../../hooks/permissions')
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const absencesFastJoin = require('../../hooks/fastjoin/absences')
+const resolveUser = require('../../hooks/resolve_user')
 
 module.exports = {
   before: {
     all: [ permissions.apiOrJWT ],
     find: [],
     get: [],
-    create: [],
+    create: [ resolveUser ],
     update: [],
     patch: [],
     remove: []
@@ -15,23 +16,11 @@ module.exports = {
 
   after: {
     all: [],
-    find: [
-      absencesFastJoin.user,
-      absencesFastJoin.absencestype
-    ],
-    get: [
-      absencesFastJoin.user,
-      absencesFastJoin.absencestype
-    ],
-    create: [
-      absencesFastJoin.user,
-      absencesFastJoin.absencestype
-    ],
+    find: [ absencesFastJoin.absencestype ],
+    get: [ absencesFastJoin.absencestype ],
+    create: [ absencesFastJoin.absencestype ],
     update: [],
-    patch: [
-      absencesFastJoin.user,
-      absencesFastJoin.absencestype
-    ],
+    patch: [ absencesFastJoin.absencestype ],
     remove: []
   },
 

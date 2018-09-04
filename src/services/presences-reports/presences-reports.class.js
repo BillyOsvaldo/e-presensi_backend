@@ -65,114 +65,96 @@ class Service {
     }
 
     const getDocsUsers = async () => {
-      var params2 = {
-        query: {
-          organization: params.query.organization,
-          $nopaginate: true,
-          $select: ['_id', 'position']
-        }
-      }
-
-      const docsUsers = await params.client.service('users').find({ ...params, ...params2 })
+      const MachinesUsers = this.app.service('machinesusers').Model
+      const where = { 'user.organizationuser.organization._id': objectid(params.query.organization) }
+      const sort = { 'user.position.order': 1 }
+      const docsMachinesUsers = await MachinesUsers.find(where).sort(sort)
+      const docsUsers = docsMachinesUsers.map(doc => doc.user)
       return docsUsers
     }
 
-    const sortUsers = async (docUsers) => {
-      const getOrderByUserId = async (positionId) => {
-        if(!positionId) return 999999
-
-        const docsOrgStru = await params.client.service('organizationstructures').get(positionId, params)
-        const order = docsOrgStru.order
-        return order
-      }
-
-      for(let docUser of docUsers) {
-        docUser.order = await getOrderByUserId(docUser.position)
-      }
-
-      const docUsersSorted = docUsers.sort((a, b) => a.order - b.order)
-      return docUsersSorted
+    const getDocsPresences = async () => {
+      const aggregatePresencesData = [
+        {
+          $project: {
+            user: 1,
+            time: 1,
+            mode: 1,
+            month: { $month: '$workDay'},
+            year: { $year: '$workDay'},
+            status: 1
+          }
+        },
+        {
+          $match: {
+            $and: [
+              { 'user.organizationuser.organization._id': objectid(params.query.organization) },
+              { month: parseInt(params.query.month) },
+              { year: parseInt(params.query.year) },
+              { status: true }
+            ]
+          }
+        }
+      ]
+      return await Presences.aggregate(aggregatePresencesData)
     }
 
-    const docsUsers = await getDocsUsers()
-    const docsUsersSorted = await sortUsers(docsUsers)
-    const usersIds = docsUsersSorted.map(doc => objectid(doc._id))
+    const getDocsAbsences = async () => {
+      /*
+        find absences where
+          startDate is between date ${`first date`-`current month`-`current year` till ${`max`-`currentmonth`-`currentyear`}
+          endDate is between date ${`first date`-`current month`-`current year` till ${`max`-`currentmonth`-`currentyear`}
+      */
+      const aggregateAbsencesData = [
+        {
+          $project: {
+            user: 1,
+            startDate: 1,
+            endDate: 1,
+            absencestype: 1,
+            monthStartDate: { $month: '$startDate'},
+            yearStartDate: { $year: '$startDate'},
+            monthEndDate: { $month: '$endDate'},
+            yearEndDate: { $year: '$endDate'}
+          }
+        },
+        { $lookup: { from: 'absencestypes', localField: 'absencestype', foreignField: '_id', as: 'row_absence_type'} },
+        { $unwind: { path: '$row_absence_type', preserveNullAndEmptyArrays: true } },
+        {
+          $match: {
+            $and: [
+              { 'user.organizationuser.organization._id': objectid(params.query.organization) },
+              {
+                $or: [
+                  {
+                    $and: [
+                      { monthStartDate: parseInt(params.query.month) },
+                      { yearStartDate: parseInt(params.query.year) }
+                    ]
+                  },
+                  {
+                    $and: [
+                      { monthEndDate: parseInt(params.query.month) },
+                      { yearEndDate: parseInt(params.query.year) }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          $project: {
+            user: 1,
+            startDate: 1,
+            endDate: 1,
+            row_absence_type: 1
+          }
+        }
+      ]
 
-    const aggregatePresencesData = [
-      {
-        $project: {
-          user: 1,
-          time: 1,
-          mode: 1,
-          month: { $month: '$time'},
-          year: { $year: '$time'},
-          status: 1
-        }
-      },
-      {
-        $match: {
-          $and: [
-            { user: { $in: usersIds } },
-            { month: parseInt(params.query.month) },
-            { year: parseInt(params.query.year) },
-            { status: true }
-          ]
-        }
-      }
-    ]
-
-    /*
-      find absences where
-        startDate is between date ${`first date`-`current month`-`current year` till ${`max`-`currentmonth`-`currentyear`}
-        endDate is between date ${`first date`-`current month`-`current year` till ${`max`-`currentmonth`-`currentyear`}
-    */
-    const aggregateAbsencesData = [
-      {
-        $project: {
-          user: 1,
-          startDate: 1,
-          endDate: 1,
-          absencestype: 1,
-          monthStartDate: { $month: '$startDate'},
-          yearStartDate: { $year: '$startDate'},
-          monthEndDate: { $month: '$endDate'},
-          yearEndDate: { $year: '$endDate'}
-        }
-      },
-      { $lookup: { from: 'absencestypes', localField: 'absencestype', foreignField: '_id', as: 'row_absence_type'} },
-      { $unwind: { path: '$row_absence_type', preserveNullAndEmptyArrays: true } },
-      {
-        $match: {
-          $and: [
-            { user: { $in: usersIds } },
-            {
-              $or: [
-                {
-                  $and: [
-                    { monthStartDate: parseInt(params.query.month) },
-                    { yearStartDate: parseInt(params.query.year) }
-                  ]
-                },
-                {
-                  $and: [
-                    { monthEndDate: parseInt(params.query.month) },
-                    { yearEndDate: parseInt(params.query.year) }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      },
-      {
-        $project: {
-          user: 1,
-          startDate: 1,
-          endDate: 1,
-          row_absence_type: 1
-        }
-      }
-    ]
+      return await Absences.aggregate(aggregateAbsencesData)
+    }
 
     const getAbsencesByUser = (user, docs) => {
       return docs.filter(doc => doc.user.toString() == user.toString())
@@ -196,7 +178,7 @@ class Service {
     }
 
     const getPresencesByUser = (user, docs) => {
-      return docs.filter(doc => doc.user.toString() == user.toString())
+      return docs.filter(doc => doc.user._id.toString() == user.toString())
     }
 
     const getPresenceByDate = (argDate, user, docs) => {
@@ -276,21 +258,17 @@ class Service {
       return (queryMonth == currentMonth) && (queryYear == currentYear)
     }
 
-    const docsAbsences = await Absences.aggregate(aggregateAbsencesData)
-    const docsPresences = await Presences.aggregate(aggregatePresencesData)
+    const docsUsers = await getDocsUsers()
+    const docsAbsences = await getDocsAbsences()
+    const docsPresences = await getDocsPresences()
     const daysInMonth = getDaysInMonth(queryMonthPad, params.query.year)
 
+    //const docsPresences = await resolveUsers(usersIds)
     var resData = []
-    for(let user of usersIds) {
-      let docUser = await users.get(user, getParamsWithHeader())
-      if(!docUser.profile) continue
-
-      let docProfile = await profiles.get(docUser.profile, getParamsWithHeader())
-      if(!docProfile._id) continue
-
-      var row = {
-        name: utils.getFullName(docProfile),
-        _id: user,
+    for(let docUser of docsUsers) {
+      let row = {
+        name: utils.getFullName(docUser.profile),
+        _id: docUser._id,
         tepat_waktu: 0,
         telat: 0,
         pulang_cepat: 0,
@@ -312,7 +290,7 @@ class Service {
         let day = dateCounter.toString().padStart(2, '0')
         // format $dateArg is 2018-04-30
         let dateArg = `${params.query.year}-${queryMonthPad}-${day}`
-        let docInOut = getPresenceByDate(new Date(dateArg), user, docsPresences)
+        let docInOut = getPresenceByDate(new Date(dateArg), docUser._id, docsPresences)
 
         if(!docInOut) { // if null then current user is alpha
           row.alpa++
@@ -338,10 +316,10 @@ class Service {
       }
 
       // absences
-      row.dl = countAbsence('Dinas Luar', user, docsAbsences)
-      row.cuti = countAbsence('Cuti', user, docsAbsences)
-      row.izin = countAbsence('Izin', user, docsAbsences)
-      row.sakit = countAbsence('Sakit', user, docsAbsences)
+      row.dl = countAbsence('Dinas Luar', docUser._id, docsAbsences)
+      row.cuti = countAbsence('Cuti', docUser._id, docsAbsences)
+      row.izin = countAbsence('Izin', docUser._id, docsAbsences)
+      row.sakit = countAbsence('Sakit', docUser._id, docsAbsences)
 
       resData.push(row)
     }

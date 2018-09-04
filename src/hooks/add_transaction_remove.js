@@ -4,18 +4,11 @@ module.exports = async (context) => {
   const inc = count + 1
   const commandRemove = 2
 
-  const getUsername = async () => {
-    const users = context.params.client.service('users')
-    const docUser = await users.get(context.data.user, context.params)
-    const userId = docUser.username
-    return { user_id: userId }
-  }
-
   const data = {
     trans_id: inc,
     dev_id: context.data.dev_id,
     command: commandRemove,
-    command_value: await getUsername()
+    command_value: { user_id: context.data.user.username }
   }
   await transactions.create(data, context.params)
 }

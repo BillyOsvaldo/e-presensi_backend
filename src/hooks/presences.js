@@ -33,7 +33,7 @@ const getSpecialTime = async (userId, ctxDate, context) => {
   const SpecialTimes = context.app.service('specialtimes').Model
 
   const where = {
-    user: objectid(userId),
+    'user._id': objectid(userId),
     endDate: { $gte: ctxDateObj },
     startDate: { $lte: ctxDateObj }
   }
@@ -378,7 +378,7 @@ const getPresenceCountToday = async (userId, configTimeInOut, minuteBeforeTimeIn
       $gte: fromMoment.format(),
       $lte: untilMoment.format(),
     },
-    user: ObjectId(context.data.user)
+    'user._id': ObjectId(context.data.user)
   }
 
   const count = await Presences.countDocuments(where)
@@ -415,7 +415,7 @@ const getPresenceToday = async (userId, configTimeInOut, minuteBeforeTimeIn, con
       $gte: fromMoment.format(),
       $lte: untilMoment.format(),
     },
-    user: objectid(context.data.user)
+    'user._id': objectid(context.data.user)
   }
 
   const doc = await Presences.find(where)
@@ -436,7 +436,7 @@ const isContinuedFromYesterday = async (userId, currTimeMoment, context) => {
       $gte: from.format(),
       $lte: until.format(),
     },
-    user: objectid(context.data.user)
+    'user._id': objectid(context.data.user)
   }
 
   const docs = await Presences.find(where)
@@ -588,7 +588,7 @@ const checkIfExist = async (context) => {
     {
       $match: {
         $and: [
-          { user: objectid(context.data.user) },
+          { 'user._id': objectid(context.data.user) },
           { dayOfMonth: parseInt(date) },
           { month: parseInt(month) },
           { year: parseInt(year) },

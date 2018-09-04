@@ -35,7 +35,7 @@ class Service {
           {
             $match: {
               $and: [
-                { user: objectid(params.query.user) },
+                { 'user._id': objectid(params.query.user) },
                 {
                   time: {
                     $gte: new Date(fromStr),
@@ -108,7 +108,7 @@ class Service {
         {
           $match: {
             $and: [
-              { user: objectid(params.query.user) },
+              { 'user._id': objectid(params.query.user) },
               { month: parseInt(params.query.month) },
               { year: parseInt(params.query.year) },
               { status: true }
