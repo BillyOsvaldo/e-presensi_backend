@@ -2,6 +2,7 @@
 const logger = require('./hooks/logger');
 const setClient = require('./hooks/client')
 const removeUnusedHeaders = require('./hooks/remove_unused_headers')
+const noPaginateHandler = require('./hooks/no_paginate_handler')
 
 module.exports = {
   before: {
@@ -9,7 +10,9 @@ module.exports = {
       setClient,
       removeUnusedHeaders
     ],
-    find: [],
+    find: [
+      noPaginateHandler,
+    ],
     get: [],
     create: [],
     update: [],

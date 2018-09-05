@@ -15,15 +15,21 @@ class Service {
     // resolve users
     const collections = ['absences', 'fingersusers', 'machinesusers', 'presences', 'specialtimes']
     for(let collection of collections) {
-      let docs = await this.app.service(collection).find(getParamsWithHeader())
-      for(let doc of docs.data) {
+      let additional = { query: { $nopaginate: true } }
+      let docs = await this.app.service(collection).find(getParamsWithHeader(additional))
+      for(let doc of docs) {
         const alreadyResolved = !objectid.isValid(doc.user)
+        console.log('alreadyResolved', alreadyResolved)
         if(alreadyResolved) {
           doc.user = doc.user._id
         }
 
-        const docUser = await params.client.service('usersmanagement').get(doc.user, getParamsWithHeader())
-        await this.app.service(collection).patch(doc._id, {user: docUser}, getParamsWithHeader())
+        try {
+          const docUser = await params.client.service('usersmanagement').get(doc.user, getParamsWithHeader())
+          await this.app.service(collection).patch(doc._id, {user: docUser}, getParamsWithHeader())
+        } catch(e) {
+          console.log(`skip ${ collection }: ${ doc.user }`)
+        }
       }
     }
 
