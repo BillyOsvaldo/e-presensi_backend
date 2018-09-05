@@ -3,6 +3,7 @@ const logger = require('./hooks/logger');
 const setClient = require('./hooks/client')
 const removeUnusedHeaders = require('./hooks/remove_unused_headers')
 const noPaginateHandler = require('./hooks/no_paginate_handler')
+const { disablePagination } = require('feathers-hooks-common')
 
 module.exports = {
   before: {
@@ -12,6 +13,7 @@ module.exports = {
     ],
     find: [
       noPaginateHandler,
+      disablePagination()
     ],
     get: [],
     create: [],
