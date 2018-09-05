@@ -11,7 +11,7 @@ module.exports = async (context) => {
     const docUser = resUsers.data[0]
     const idUser = docUser._id
 
-    const paramsMachinesUsersFind = { query: { user: idUser } }
+    const paramsMachinesUsersFind = { query: { 'user._id': idUser } }
     const resMachinesUsers = await machinesusers.find(getParamsWithHeader(paramsMachinesUsersFind))
     if(!resMachinesUsers.total) return
 
