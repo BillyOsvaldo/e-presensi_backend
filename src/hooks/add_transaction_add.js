@@ -18,5 +18,6 @@ module.exports = async (context) => {
     command: commandAdd,
     command_value: await getUsernameAndName()
   }
+
   await transactions.create(data, context.params)
 }

@@ -3,6 +3,7 @@ const addTransactionRemove = require('../../hooks/add_transaction_remove')
 const autoAddMachineField = require('../../hooks/auto_add_machine_field')
 const permissions = require('../../hooks/permissions')
 const resolveUser = require('../../hooks/resolve_user')
+const machinesUsers = require('../../hooks/machines_users')
 
 module.exports = {
   before: {
@@ -11,21 +12,22 @@ module.exports = {
     get: [],
     create: [
       autoAddMachineField.create,
-      resolveUser
+      resolveUser,
+      machinesUsers.ignoreIfExist
     ],
     update: [],
     patch: [],
-    remove: [ autoAddMachineField.remove ]
+    remove: [ /*autoAddMachineField.remove*/ ]
   },
 
   after: {
     all: [],
     find: [],
     get: [],
-    create: [ addTransactionAdd ],
+    create: [ addTransactionRemove, addTransactionAdd ],
     update: [],
     patch: [],
-    remove: [ addTransactionRemove ]
+    remove: [ /*addTransactionRemove*/ ]
   },
 
   error: {

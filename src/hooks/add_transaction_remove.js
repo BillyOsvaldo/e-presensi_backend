@@ -10,5 +10,6 @@ module.exports = async (context) => {
     command: commandRemove,
     command_value: { user_id: context.data.user.username }
   }
+
   await transactions.create(data, context.params)
 }

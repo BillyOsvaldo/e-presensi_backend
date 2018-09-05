@@ -16,6 +16,7 @@ module.exports = class {
   }
 
   async remove(id, params) {
+    return { ignored: true }
     return await this.app.service('machinesusers').remove(id, params)
   }
 

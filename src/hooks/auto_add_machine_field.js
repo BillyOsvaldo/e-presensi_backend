@@ -1,5 +1,4 @@
 const getParamsWithHeader = require('../helpers/get_params_with_header')
-const errors = require('@feathersjs/errors')
 
 module.exports.create = async (context) => {
   const machines = context.app.service('machines')

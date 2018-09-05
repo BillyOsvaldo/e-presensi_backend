@@ -17,7 +17,9 @@ module.exports = function () {
     }
     
     if (context.error) {
+      if(context.error.hook) delete context.error.hook
       logger.error(context.error);
+      //console.log(context.error)
     }
   };
 };
