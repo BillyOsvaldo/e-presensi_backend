@@ -1,4 +1,6 @@
 module.exports = async (context) => {
+  if(context.result.ignored) return
+
   const transactions = context.app.service('transactions')
   const count = await transactions.Model.count()
   const inc = count + 1

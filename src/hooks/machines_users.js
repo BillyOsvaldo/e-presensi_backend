@@ -1,7 +1,7 @@
 const errors = require('@feathersjs/errors')
 const objectid = require('objectid')
 
-module.exports.ignoreIfExist = async (context) => {
+module.exports.ignoreIfExistWhenAdd = async (context) => {
   const MachinesUsers = context.app.service('machinesusers').Model
   const where = { 'user._id': objectid(context.data.user._id) }
   var doc = await MachinesUsers.findOne(where)

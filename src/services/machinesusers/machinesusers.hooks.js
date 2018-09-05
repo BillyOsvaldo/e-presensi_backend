@@ -13,21 +13,23 @@ module.exports = {
     create: [
       autoAddMachineField.create,
       resolveUser,
-      machinesUsers.ignoreIfExist
+      machinesUsers.ignoreIfExistWhenAdd
     ],
     update: [],
     patch: [],
-    remove: [ /*autoAddMachineField.remove*/ ]
+    remove: [
+      autoAddMachineField.remove
+    ]
   },
 
   after: {
     all: [],
     find: [],
     get: [],
-    create: [ addTransactionRemove, addTransactionAdd ],
+    create: [ addTransactionAdd ],
     update: [],
     patch: [],
-    remove: [ /*addTransactionRemove*/ ]
+    remove: [ addTransactionRemove ]
   },
 
   error: {
