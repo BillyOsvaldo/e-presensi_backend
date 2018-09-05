@@ -5,7 +5,8 @@ class Service {
   }
 
   async find (params) {
-    params.query = { organization: params.query.organization }
+    params.query = { 'user.organizationuser.organization._id': params.query.organization }
+    delete params.query.organization
     params.query.$select = [ '_id', 'user' ]
     params.paginate = false
     const machineUsers = this.app.service('machinesusers')
