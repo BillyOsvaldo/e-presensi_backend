@@ -40,7 +40,7 @@ class Service {
     // fill presences.workdays
     const docs = await this.app.service('presences').find(getParamsWithHeader())
     for(let doc of docs.data) {
-      let workDayMoment = moment().clone()
+      let workDayMoment = moment(doc.time).clone()
 
       workDayMoment.set({
         hours: 0,
@@ -48,6 +48,7 @@ class Service {
         seconds: 0
       })
       let workDay = workDayMoment.format('YYYY-MM-DD HH:mm:ss')
+      console.log('workDay', workDay)
       await this.app.service('presences').patch(doc._id, { workDay }, getParamsWithHeader())
     }
 
