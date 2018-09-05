@@ -35,7 +35,7 @@ class Service {
       return docsUsers
     }
 
-    const getCountTepatWaktu = async () => {
+    const getDocsTepatWaktu = async () => {
       const currentDate = moment().format('YYYY-MM-DD')
       const dateTimeStart = new Date(currentDate + ' 04:00')
       const dateTimeEnd = new Date(currentDate + ' ' + configTimeIn)
@@ -50,10 +50,10 @@ class Service {
         }
       }
 
-      return Presences.count(query)
+      return Presences.find(query)
     }
 
-    const getCountTerlambat = async () => {
+    const getDocsTerlambat = async () => {
       const currentDate = moment().format('YYYY-MM-DD')
       const dateTimeStart = new Date(currentDate + ' ' + configTimeIn)
       const dateTimeEnd = new Date(currentDate + ' 23:59')
@@ -68,7 +68,7 @@ class Service {
         }
       }
 
-      return Presences.count(query)
+      return Presences.find(query)
     }
 
     const getKetidakhadiran = async () => {
@@ -112,16 +112,23 @@ class Service {
     }
 
     const docsUsers = await getDocsUsers()
+    const docsTepatWaktu = await getDocsTepatWaktu()
+    const docsTerlambat = await getDocsTerlambat()
+
     const countUsers = docsUsers.length
-    const countTepatWaktu = await getCountTepatWaktu()
-    const countTerlambat = await getCountTerlambat()
+    const countTepatWaktu = docsTepatWaktu.length
+    const countTerlambat = docsTerlambat.length
 
     const data = {
       _id: '5ae88e1f72f0bb58be83bdac',
       tepat_waktu: countTepatWaktu,
       terlambat: countTerlambat,
       total: countUsers,
-      percentage: {}
+      percentage: {},
+      detail: {
+        tepat_waktu: docsTepatWaktu,
+        terlambat: docsTerlambat
+      }
     }
 
     data.belumDatang = (data.total - countTepatWaktu - countTerlambat)
