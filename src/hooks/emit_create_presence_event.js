@@ -26,9 +26,11 @@ module.exports = async (context) => {
     if(context.data.time < timeInDateTime) {
       eventCustom = eventName + '_tepat_waktu'
       context.service.emit(eventCustom, data)
+      context.service.emit('tepat_waktu', data)
     } else {
       eventCustom = eventName + '_terlambat'
       context.service.emit(eventCustom, data)
+      context.service.emit('terlambat', data)
     }
   }
 }
