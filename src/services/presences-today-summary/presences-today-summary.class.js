@@ -1,6 +1,7 @@
 const moment = require('moment-timezone')
 const objectid = require('objectid')
 const getTimeInTimeOut = require('../../helpers/get_time_in_time_out')
+const utils = require('../../helpers/utils')
 
 moment.tz.setDefault('Asia/Jakarta')
 
@@ -96,23 +97,24 @@ class Service {
           ...getWhere(),
           absencestype: objectid(doc._id),
           $or: [
-            {
-              startDate: {
-                $gt: dateTimeStart,
-                $lte: dateTimeEnd
-              }
-            },
-            {
-              endDate: {
-                $gt: dateTimeStart,
-                $lte: dateTimeEnd
-              }
-            }
+            { startDate: { $gte: dateTimeEnd } },
+            { endDate: { $lte: dateTimeStart } },
           ]
         }
 
-        let count = await Absences.count(match)
-        doc.count = count
+        const getWhereReversed = (idsReversed) => {
+          return {
+            ...getWhere(),
+            absencestype: objectid(doc._id),
+            _id: { $nin: idsReversed }
+          }
+        }
+        const docsIdsReversed = await Absences.find(match)
+        const idsReversed = docsIdsReversed.map(doc => doc._id)
+        let docs = await Absences.find(getWhereReversed(idsReversed))
+
+        doc.count = docs.length
+        doc.names = docs.map(doc => utils.getFullName(doc.user.profile))
       }
 
       return docs2
@@ -126,7 +128,8 @@ class Service {
       _id: '5ae88e1f72f0bb58be83bdac',
       tepat_waktu: countTepatWaktu,
       terlambat: countTerlambat,
-      total: countUsers
+      total: countUsers,
+      detail: {}
     }
 
     data.belum_datang = (data.total - countTepatWaktu - countTerlambat)
@@ -134,6 +137,7 @@ class Service {
     for(let doc of await getKetidakhadiran()) {
       data[doc.slug] = doc.count
       data.belum_datang = data.belum_datang - doc.count
+      data.detail[doc.slug] = doc.names
     }
 
     return {
