@@ -14,7 +14,6 @@ class Service {
 
     const docs = await MachinesUsers.aggregate(aggregateData)
     const docsWithoutId = docs.map(doc => doc._id)
-    console.log('docsWithoutId', docsWithoutId)
 
     return {
       _id: docsWithoutId[0]._id,
