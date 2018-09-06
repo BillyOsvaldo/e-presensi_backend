@@ -42,6 +42,8 @@ const migrations = require('./migrations/migrations.service.js');
 
 const presencesTodayOrganizations = require('./presences-today-organizations/presences-today-organizations.service.js');
 
+const infoOrganizations = require('./info-organizations/info-organizations.service.js');
+
 module.exports = function (app) {
   app.configure(presences);
   app.configure(users);
@@ -80,4 +82,5 @@ module.exports = function (app) {
   app.configure(workdaysmanagement);
   app.configure(migrations);
   app.configure(presencesTodayOrganizations);
+  app.configure(infoOrganizations);
 };
