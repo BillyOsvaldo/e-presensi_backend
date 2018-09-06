@@ -15,7 +15,6 @@ module.exports = async (context) => {
     organization: context.params.organization
   }
 
-  // organization_21313213131
   context.service.emit(eventName, data)
 
   const { timeIn, timeOut } = await getTimeInTimeOut(context)
@@ -32,8 +31,8 @@ module.exports = async (context) => {
       context.service.emit('organization_tepat_waktu', data)
     } else {
       eventCustom = eventName + '_terlambat'
-      context.service.emit(eventCustom, data)
       context.service.emit('terlambat', data)
+      context.service.emit(eventCustom, data)
       context.service.emit('organization_terlambat', data)
     }
   }
