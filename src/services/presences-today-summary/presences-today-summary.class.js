@@ -26,22 +26,29 @@ class Service {
     const Absences = this.app.service('absences').Model
     const AbsencesTypes = this.app.service('absencestypes').Model
 
-    const getDocsUsers = async () => {
-      const MachinesUsers = this.app.service('machinesusers').Model
-      const sort = { 'user.position.order': 1 }
-      const where = { 'user.organizationuser.organization._id': objectid(params.query.organization) }
-      const docsMachinesUsers = await MachinesUsers.find(where).sort(sort)
-      const docsUsers = docsMachinesUsers.map(doc => doc.user)
-      return docsUsers
+    const getWhere = () => {
+      var where
+      if(params.query.organization)
+        where = { 'user.organizationuser.organization._id': objectid(params.query.organization) }
+      else
+        where = {}
+
+      return where
     }
 
-    const getDocsTepatWaktu = async () => {
+    const getCountUsers = async () => {
+      const MachinesUsers = this.app.service('machinesusers').Model
+      const count = await MachinesUsers.count(getWhere())
+      return count
+    }
+
+    const getCountTepatWaktu = async () => {
       const currentDate = moment().format('YYYY-MM-DD')
       const dateTimeStart = new Date(currentDate + ' 04:00')
       const dateTimeEnd = new Date(currentDate + ' ' + configTimeIn)
 
-      const query = {
-        'user.organizationuser.organization._id': objectid(params.query.organization),
+      var query = {
+        ...getWhere(),
         mode: 1,
         status: true,
         time: {
@@ -50,16 +57,16 @@ class Service {
         }
       }
 
-      return Presences.find(query)
+      return await Presences.count(query)
     }
 
-    const getDocsTerlambat = async () => {
+    const getCountTerlambat = async () => {
       const currentDate = moment().format('YYYY-MM-DD')
       const dateTimeStart = new Date(currentDate + ' ' + configTimeIn)
       const dateTimeEnd = new Date(currentDate + ' 23:59')
 
       const query = {
-        'user.organizationuser.organization._id': objectid(params.query.organization),
+        ...getWhere(),
         mode: 1,
         status: true,
         time: {
@@ -68,7 +75,7 @@ class Service {
         }
       }
 
-      return Presences.find(query)
+      return await Presences.count(query)
     }
 
     const getKetidakhadiran = async () => {
@@ -86,7 +93,6 @@ class Service {
 
       for(let doc of docs2) {
         let match = {
-          'user.organizationuser.organization._id': objectid(params.query.organization),
           absencestype: objectid(doc._id),
           $or: [
             {
@@ -104,6 +110,9 @@ class Service {
           ]
         }
 
+        if(params.query.organization)
+          match['user.organizationuser.organization._id'] = objectid(params.query.organization)
+
         let count = await Absences.count(match)
         doc.count = count
       }
@@ -111,37 +120,23 @@ class Service {
       return docs2
     }
 
-    const docsUsers = await getDocsUsers()
-    const docsTepatWaktu = await getDocsTepatWaktu()
-    const docsTerlambat = await getDocsTerlambat()
-
-    const countUsers = docsUsers.length
-    const countTepatWaktu = docsTepatWaktu.length
-    const countTerlambat = docsTerlambat.length
+    const countUsers = await getCountUsers()
+    const countTepatWaktu = await getCountTepatWaktu()
+    const countTerlambat = await getCountTerlambat()
 
     const data = {
       _id: '5ae88e1f72f0bb58be83bdac',
       tepat_waktu: countTepatWaktu,
       terlambat: countTerlambat,
-      total: countUsers,
-      percentage: {},
-      detail: {
-        tepat_waktu: docsTepatWaktu,
-        terlambat: docsTerlambat
-      }
+      total: countUsers
     }
 
-    data.belumDatang = (data.total - countTepatWaktu - countTerlambat)
+    data.belum_datang = (data.total - countTepatWaktu - countTerlambat)
 
     for(let doc of await getKetidakhadiran()) {
       data[doc.slug] = doc.count
-      data.belumDatang = data.belumDatang - doc.count
-      data.percentage[doc.slug] = (doc.count / data.total * 100).toFixed(2) + '%'
+      data.belum_datang = data.belum_datang - doc.count
     }
-
-    data.percentage.tepat_waktu = (data.tepat_waktu / data.total * 100).toFixed(2) + '%'
-    data.percentage.terlambat   = (data.terlambat / data.total * 100).toFixed(2) + '%'
-    data.percentage.belumDatang = (data.belumDatang / data.total * 100).toFixed(2) + '%'
 
     return {
       total: 1,
