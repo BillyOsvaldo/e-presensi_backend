@@ -93,6 +93,7 @@ class Service {
 
       for(let doc of docs2) {
         let match = {
+          ...getWhere(),
           absencestype: objectid(doc._id),
           $or: [
             {
@@ -109,9 +110,6 @@ class Service {
             }
           ]
         }
-
-        if(params.query.organization)
-          match['user.organizationuser.organization._id'] = objectid(params.query.organization)
 
         let count = await Absences.count(match)
         doc.count = count
