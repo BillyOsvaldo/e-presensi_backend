@@ -22,7 +22,7 @@ module.exports = function (app) {
     const eventsNamePresences = docsOrganizations.data.map(doc => 'organization_' + doc._id.toString())
     const eventsNameTepatWaktu = docsOrganizations.data.map(doc => 'organization_' + doc._id.toString() + '_tepat_waktu')
     const eventsNameTerlambat = docsOrganizations.data.map(doc => 'organization_' + doc._id.toString() + '_terlambat')
-    return [ ...eventsNamePresences, ...eventsNameTepatWaktu, ...eventsNameTerlambat ]
+    return [ ...eventsNamePresences, ...eventsNameTepatWaktu, ...eventsNameTerlambat, 'tepat_waktu', 'terlambat' ]
   }
 
   const docsOrganizations = getDocsOrganizations()

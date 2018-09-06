@@ -28,12 +28,10 @@ module.exports = async (context) => {
       eventCustom = eventName + '_tepat_waktu'
       context.service.emit(eventCustom, data)
       context.service.emit('tepat_waktu', data)
-      context.service.emit('organization_tepat_waktu', data)
     } else {
       eventCustom = eventName + '_terlambat'
       context.service.emit('terlambat', data)
       context.service.emit(eventCustom, data)
-      context.service.emit('organization_terlambat', data)
     }
   }
 }
