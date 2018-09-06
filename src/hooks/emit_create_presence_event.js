@@ -11,7 +11,8 @@ module.exports = async (context) => {
     name: context.params.name,
     time: context.data.time,
     user: context.data.user._id,
-    mode: parseInt(context.data.mode)
+    mode: parseInt(context.data.mode),
+    organization: context.params.organization
   }
 
   context.service.emit(eventName, data)
