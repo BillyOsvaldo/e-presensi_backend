@@ -51,10 +51,9 @@ class Service {
       ]
   */
   async find (params) {
+
     const Presences = this.app.service('presences').Model
     const Absences = this.app.service('absences').Model
-    const users = params.client.service('users')
-    const profiles = params.client.service('profiles')
 
     const queryMonthPad = params.query.month.toString().padStart(2, '0')
 
@@ -74,29 +73,26 @@ class Service {
     }
 
     const getDocsPresences = async () => {
-      const aggregatePresencesData = [
-        {
-          $project: {
-            user: 1,
-            time: 1,
-            mode: 1,
-            month: { $month: '$workDay'},
-            year: { $year: '$workDay'},
-            status: 1
-          }
-        },
+      const { fromStr, untilStr } = utils.firstDayOfCurrMonthUntilSecondDayOfNextMonth(params.query.month, params.query.year)
+
+      const aggregateData = [
         {
           $match: {
             $and: [
               { 'user.organizationuser.organization._id': objectid(params.query.organization) },
-              { month: parseInt(params.query.month) },
-              { year: parseInt(params.query.year) },
+              {
+                time: {
+                  $gte: new Date(fromStr),
+                  $lte: new Date(untilStr)
+                }
+              },
               { status: true }
             ]
           }
         }
       ]
-      return await Presences.aggregate(aggregatePresencesData)
+
+      return await Presences.aggregate(aggregateData)
     }
 
     const getDocsAbsences = async () => {
@@ -177,21 +173,32 @@ class Service {
       return counter
     }
 
-    const getPresencesByUser = (user, docs) => {
+    const filterPresencesByUser = (user, docs) => {
       return docs.filter(doc => doc.user._id.toString() == user.toString())
     }
 
-    const getPresenceByDate = (argDate, user, docs) => {
+    const filterPresencesByDate = (dateCounter, docs) => {
+      const getDateCtx = () => {
+        const dateCounterStrPad = dateCounter.toString().padStart(2, '0')
+        const queryMonthPad = params.query.month.toString().padStart(2, '0')
+        const queryYear = params.query.year
+        return moment(`${queryYear}-${queryMonthPad}-${dateCounterStrPad}`).format('DD-MM-YYYY')
+      }
+      return docs.filter(doc => {
+        const docMoment = moment(doc.workDay).format('DD-MM-YYYY')
+        const todayMoment = getDateCtx()
+
+        return docMoment == todayMoment
+      })
+    }
+
+    const getPresenceByDate = (dateCounter, user, docs) => {
       var res = { modeIn: null, modeOut: null }
 
-      const docPresences = getPresencesByUser(user, docs)
+      const docPresences = filterPresencesByUser(user, docs)
       if(!Boolean(docPresences.length)) return res
 
-      const docsFiltered = docs.filter(doc => {
-        const docMoment = moment(doc.time).format('DD-MM-YYYY')
-        const argDateMoment = moment(argDate).format('DD-MM-YYYY')
-        return docMoment == argDateMoment
-      })
+      const docsFiltered = filterPresencesByDate(dateCounter, docPresences)
 
       if(!docsFiltered.length) return res
 
@@ -263,9 +270,7 @@ class Service {
     const docsPresences = await getDocsPresences()
     const daysInMonth = getDaysInMonth(queryMonthPad, params.query.year)
 
-    //const docsPresences = await resolveUsers(usersIds)
-    var resData = []
-    for(let docUser of docsUsers) {
+    const resolveReport = async (docUser) => {
       let row = {
         name: utils.getFullName(docUser.profile),
         _id: docUser._id,
@@ -281,16 +286,12 @@ class Service {
 
       // presences
       for(let dateCounter = 1; dateCounter <= daysInMonth; dateCounter++) {
-        let currentDate = (new Date()).getDate()
+        let currentDate = moment().format('D')
 
         // loop hanya sampai tanggal sekarang dibulan ini
         if(dateCounter > currentDate && queryMonthAndYearSameAsCurrentMonthAndYear()) break
 
-        // format $day is 01, 02, 03 ... 30, 31
-        let day = dateCounter.toString().padStart(2, '0')
-        // format $dateArg is 2018-04-30
-        let dateArg = `${params.query.year}-${queryMonthPad}-${day}`
-        let docInOut = getPresenceByDate(new Date(dateArg), docUser._id, docsPresences)
+        let docInOut = getPresenceByDate(dateCounter, docUser._id, docsPresences)
 
         if(!docInOut) { // if null then current user is alpha
           row.alpa++
@@ -321,8 +322,11 @@ class Service {
       row.izin = countAbsence('Izin', docUser._id, docsAbsences)
       row.sakit = countAbsence('Sakit', docUser._id, docsAbsences)
 
-      resData.push(row)
+      return row
     }
+
+    const docsUsersJobs = docsUsers.map(docUser => resolveReport(docUser))
+    const resData = await Promise.all(docsUsersJobs)
 
     return { total: resData.length, skip: 0, limit: resData.length, data: resData }
   }

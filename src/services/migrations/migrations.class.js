@@ -38,17 +38,18 @@ class Service {
     await this.app.service('machinesusers').Model.update({}, unset, {strict: false})
 
     // fill presences.workdays
-    const docs = await this.app.service('presences').find(getParamsWithHeader())
-    for(let doc of docs.data) {
+    let additional = { query: { $nopaginate: true } }
+    const docs = await this.app.service('presences').find(getParamsWithHeader(additional))
+    for(let doc of docs) {
       let workDayMoment = moment(doc.time).clone()
 
       workDayMoment.set({
         hours: 0,
         minutes: 0,
-        seconds: 0
+        seconds: 0,
+        milliseconds: 0
       })
       let workDay = workDayMoment.format('YYYY-MM-DD HH:mm:ss')
-      console.log('workDay', workDay)
       await this.app.service('presences').patch(doc._id, { workDay }, getParamsWithHeader())
     }
 
